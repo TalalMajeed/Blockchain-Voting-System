@@ -4,10 +4,10 @@ A Web 3.0 based Voting System powered by Ethereum Smart Contracts. This Reposito
 
 ## Collaborators:
 
-We are a team of software engineers from NUST University, and this repository is part of an Open Source Collaboaration
+We are a team of software engineers from NUST University, and this repository is part of an Open Source Collaboration
 
 -   Talal Majeed - [GitHub](https://www.github.com/TalalMajeed)
--   Noor Fatima - [GitHub](https://github.com/nooorf)
+-   Noor Fatima - [GitHub](https://www.github.com/nooorf)
 
 ## Installation:
 
