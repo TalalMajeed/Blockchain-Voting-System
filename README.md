@@ -35,7 +35,7 @@ This project has the following software requirements:
 
 ## Tech Stack:
 
-The Frontend Part of this Project is based on the following Tech Stack:
+This Project is based on the following Tech Stack:
 
 -   NextJS
 -   Web Sockets
