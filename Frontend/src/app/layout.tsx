@@ -54,20 +54,22 @@ export default function RootLayout({
                     />
                 </head>
                 <body
-                    className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+                    className={`${geistSans.variable} ${geistMono.variable} antialiased flex min-h-screen flex-col`}
                 >
-                    <section className="pl-10 pr-10 bg-transparent border-b-2 flex h-[70px] items-center justify-between">
-                        <div className="text-xl font-semibold">
-                            Voting System
-                        </div>
-                        {pathname === "/" && (
-                            <Link href="/login" passHref>
-                                <Button className="h-[45px] w-[120px] text-base">
-                                    Login
-                                </Button>
-                            </Link>
-                        )}
-                    </section>
+                    {!pathname.includes("login") && (
+                        <section className="pl-10 pr-10 bg-transparent border-b-2 flex h-[70px] items-center justify-between">
+                            <div className="text-xl font-[500]">
+                                Voting System
+                            </div>
+                            {pathname === "/" && (
+                                <Link href="/login" passHref>
+                                    <Button className="h-[45px] w-[120px] text-base">
+                                        Login
+                                    </Button>
+                                </Link>
+                            )}
+                        </section>
+                    )}
                     {children}
                 </body>
             </html>

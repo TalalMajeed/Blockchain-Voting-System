@@ -10,7 +10,7 @@ const { Title, Text } = Typography;
 
 export default function Home() {
     return (
-        <Layout className="min-h-screen font-sans">
+        <Layout className="min-h-[100%] font-sans">
             <Content className="flex flex-col items-center justify-center gap-[10px]">
                 <Image
                     src="/logo.png"
