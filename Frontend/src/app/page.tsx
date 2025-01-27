@@ -11,10 +11,6 @@ const { Title, Text } = Typography;
 export default function Home() {
     return (
         <Layout className="min-h-screen font-sans">
-            <Header className="bg-transparent border-b-2 flex h-[70px] items-center justify-between">
-                <div className="text-xl font-semibold">Voting System</div>
-                <Button className="h-[45px] w-[120px] text-base">Login</Button>
-            </Header>
             <Content className="flex flex-col items-center justify-center gap-[10px]">
                 <Image
                     src="/logo.png"
