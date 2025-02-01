@@ -1,11 +1,12 @@
-function sendWhatsAppMessage(phoneNumber, callback) {
+function sendWhatsAppMessage(phoneNumber, otp, callback) {
     const url = "https://graph.facebook.com/v21.0/569982299523772/messages";
-    const randomNumber = Math.floor(100000 + Math.random() * 900000);
-    const sendText = `${randomNumber}`;
+    //const randomNumber = Math.floor(100000 + Math.random() * 900000);
+    //const sendText = `${randomNumber}`;
+    const sendText = `${otp}`;
 
     const headers = {
         Authorization:
-            "Bearer EAAIbRMn3t34BO5fbNc2D7OqfcLabmXSdYFFQMHHnnSkTepqbZAmJqQ1GWuJoM5UgmDGDiIfZCvSqeupWiVqBBiW0SHHGRkZA6ABdckWSuHkbyORKMeDwNGOhMZA9CixKTPKV7d0cnGXfWycHZA9ZBW5N0FthqP1vocTG889tTwAm393GXybkFbalE6xRX5BvDZBwYdrUlDkiXoygMeKrsv6YN1wZBaWEMokW8q0ZD",
+            "Bearer EAAIbRMn3t34BO7128vOmwXCJOUSUFH7D9KIKC4ttZAPgEqQfqnQTKIDKPNZBLjtAUHZC8dMpgXoAMpGrqC2wYWB7rX8RkyvYKBW7rz61uS6hvdy2BLwBTwNO2oza502XklkPOiAfQNbnpUA4CtKyaWpjZBrddJlP69Vjib48DYSR88qZATZBjr3jsBr8nRb4rn3hGiRtZA2zTZA1mm20WxAuGDSpZBMdxFuWJh3eW",
         "Content-Type": "application/json",
     };
 
