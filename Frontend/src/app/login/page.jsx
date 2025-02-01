@@ -249,10 +249,8 @@ const Login = () => {
             </Button>
 
             <Typography className="text-base mt-5 mb-5 text-center text-white">
-              Don't have an account?
-              <Button component="a" href="/signup" sx={{ textTransform: "none", color: "#00796b" }}>
-                Sign Up
-              </Button>
+              Are you an admin?
+              <Button onClick={() => router.push("/admin")} sx={{ textTransform: "none", color: "#00796b" }}>Admin Login</Button>
             </Typography>
           </form>
         </CardContent>

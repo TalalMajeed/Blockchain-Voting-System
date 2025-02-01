@@ -43,7 +43,8 @@ import bodyParser from "body-parser";
 const session = require("express-session");
 const { otpStore, router: otpRouter } = require("./routes/otp");
 const verifyRoutes = require("./routes/verify-otp");
-dotenv.config();
+const verifyAdminRoutes = require("./routes/verify-admin");
+dotenv.config({ path: ".env.local" });
 
 import indexRoute from "./routes/indexRoute";
 
@@ -55,7 +56,7 @@ app.use(
     credentials: true 
   })
 );
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(helmet());
 
 app.use(
@@ -71,6 +72,7 @@ const PORT = 5000;
 
 app.use("/api", otpRouter);
 app.use("/api", verifyRoutes);
+app.use("/api", verifyAdminRoutes);
 
 app.use("/", indexRoute);
 
