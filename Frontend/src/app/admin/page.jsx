@@ -100,7 +100,7 @@ const AdminLogin = () => {
             </Box>
 
             <Button type="submit" fullWidth variant="contained" sx={{ py: 1.5, borderRadius: 6, backgroundColor: "#00796b", "&:hover": { backgroundColor: "#008080" } }} disabled={isLoading}>
-              {isLoading ? <CircularProgress size={24} color="inherit" /> : "Send OTP"}
+              {isLoading ? <CircularProgress size={24} color="inherit" /> : "Login"}
             </Button>
 
             <Typography className="text-base mt-5 mb-5 text-center text-white">
