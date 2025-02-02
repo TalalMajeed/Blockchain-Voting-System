@@ -21,10 +21,8 @@ router.post("/", async (req, res) => {
     return res.status(400).json({ error: "Email and Phone Required" });
   }
 
-  const existingUser = await db.query(
-    "SELECT * FROM users WHERE email = $1 OR phone = $2",
-    [email, phone]
-  );
+  const stmt = db.prepare("SELECT * FROM users WHERE email = ? OR phone = ?");
+  const existingUser: any = stmt.get(email, phone);
 
   if (existingUser.rows.length > 0) {
     return res.status(400).json({ error: "User already exists" });

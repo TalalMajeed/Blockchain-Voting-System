@@ -1,4 +1,4 @@
-import PQueue from "p-queue";
+const PQueue = require("p-queue").default;
 
 const otpStorage = new Map<string, { data: Object; expiresAt: number }>();
 const OTP_EXPIRY_MS = 5 * 60 * 1000;

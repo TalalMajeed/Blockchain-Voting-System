@@ -2,7 +2,6 @@ import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
-import bodyParser from "body-parser";
 import otpRoute from "./routes/validateRoute.ts";
 import verifyRoute from "./routes/verifyRoute.ts";
 import adminRoute from "./routes/adminRoute.ts";

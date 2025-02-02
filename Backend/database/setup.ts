@@ -1,9 +1,18 @@
-const sqlite3 = require("sqlite3").verbose();
-const db = new sqlite3.Database("./database/users.db");
+import Database from "better-sqlite3";
 
-db.serialize(function () {
-  db.run("CREATE TABLE users (id INTEGER PRIMARY KEY, email TEXT, phone TEXT)");
-});
-db.close();
+const db = new Database("mydatabase.db");
+
+console.log("Database connected!");
+
+// Create the users table if it doesn't exist
+db.prepare(
+  `
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, 
+    email TEXT, 
+    phone TEXT
+  )
+`
+).run();
 
 export default db;
