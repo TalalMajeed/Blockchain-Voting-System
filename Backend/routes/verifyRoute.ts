@@ -1,0 +1,54 @@
+import { Router } from "express";
+import express from "express";
+
+const router: Router = express.Router();
+
+import { storeOTP } from "../workers/otpWorker.ts";
+import { sendEmailUsingGmail } from "../utils/email.ts";
+import { sendWhatsAppMessage } from "../utils/whatsapp.ts";
+import db from "../database/setup.ts";
+
+interface RequestBody {
+  email: string;
+  phone: string;
+}
+
+router.post("/", async (req, res) => {
+  const { email, phone } = req.body as RequestBody;
+  let mode = "whatsapp";
+
+  if (!email || !phone) {
+    return res.status(400).json({ error: "Email and Phone Required" });
+  }
+
+  const existingUser = await db.query(
+    "SELECT * FROM users WHERE email = $1 OR phone = $2",
+    [email, phone]
+  );
+
+  if (existingUser.rows.length > 0) {
+    return res.status(400).json({ error: "User already exists" });
+  }
+
+  let otp: string = "";
+  try {
+    otp = (await storeOTP({ email, phone })) as string;
+  } catch (error) {
+    return res.status(500).json({ error: "Error storing OTP" });
+  }
+
+  try {
+    await sendWhatsAppMessage(phone, otp);
+  } catch (error) {
+    try {
+      mode = "email";
+      await sendEmailUsingGmail(email, otp);
+    } catch (error) {
+      return res.status(500).json({ error: "Error sending OTP" });
+    }
+  }
+
+  return res.status(200).json({ message: `OTP sent via ${mode}`, mode: mode });
+});
+
+export default router;

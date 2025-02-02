@@ -1,11 +1,11 @@
-import express, { Request, Response } from "express";
+import express, { Router } from "express";
 
-const router = express.Router();
+const router: Router = express.Router();
 
-router.get("/", (req: Request, res: Response) => {
-    res.send(
-        "<h1>Blockchain Voting System</h1><p>Backend API of BlockChain Voting System</p>"
-    );
+router.get("/", (req, res) => {
+  res.send(
+    "<h1>Blockchain Voting System</h1><p>Backend API of BlockChain Voting System</p>"
+  );
 });
 
 export default router;

@@ -68,7 +68,7 @@ export default function Login() {
           </Form.Item>
         </Form>
       </Content>
-      <Footer className="text-center text-base bg-transparent text-white">
+      <Footer className="text-center text-base bg-transparent font-light text-gray-600">
         Voting System ©2025 | All Rights Reserved
       </Footer>
     </Layout>
