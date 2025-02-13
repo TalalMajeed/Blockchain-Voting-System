@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.4.22 <0.9.0;
-pragma experimental ABIEncoderV2;
+pragma solidity ^0.8.0;
 
 contract VotingSystem {
     struct Candidate {
@@ -9,12 +8,10 @@ contract VotingSystem {
     }
 
     mapping(uint => Candidate) public candidates;
-    uint[] private candidateIDs;
+    mapping(uint => uint) public votes; 
     mapping(uint => bool) private candidateExists;
 
-    mapping(address => string) private emails;
-    mapping(string => address) private emailToAddress;
-
+    uint public candidateCount;
     address public owner;
 
     modifier onlyOwner() {
@@ -24,62 +21,69 @@ contract VotingSystem {
 
     event CandidateAdded(uint id, string name);
     event CandidateRemoved(uint id, string name);
+    event Voted(address voter, uint candidateId);
 
-    // Constructor with "public" visibility for Solidity <0.7.0
-    constructor() public {
+    constructor() {
         owner = msg.sender;
+        candidateCount = 0;
     }
 
-    function addCandidate(string memory _name, uint _id) public onlyOwner {
+    
+    function addCandidate(string memory _name) public onlyOwner {
         require(bytes(_name).length > 0, "Candidate name cannot be empty");
-        require(!candidateExists[_id], "Candidate ID already exists");
 
-        candidates[_id] = Candidate(_name, _id);
-        candidateIDs.push(_id);
-        candidateExists[_id] = true;
+        uint newId = candidateCount; 
+        candidates[newId] = Candidate(_name, newId);
+        candidateExists[newId] = true;
+        candidateCount++; 
 
-        emit CandidateAdded(_id, _name);
+        emit CandidateAdded(newId, _name);
     }
 
+    
     function removeCandidate(uint _id) public onlyOwner {
         require(candidateExists[_id], "Candidate does not exist");
 
         emit CandidateRemoved(_id, candidates[_id].name);
 
         delete candidates[_id];
-        candidateExists[_id] = false;
+        delete candidateExists[_id];
     }
 
-    function registerEmail(string memory _email) public {
-        require(bytes(_email).length > 0, "Email cannot be empty");
-        require(emailToAddress[_email] == address(0), "Email already registered");
+    //whether a person has already voted or not is checked by the frontend
+    function vote(uint _candidateId) public {
+        require(candidateExists[_candidateId], "Candidate does not exist");
 
-        emails[msg.sender] = _email;
-        emailToAddress[_email] = msg.sender;
+        
+        votes[_candidateId]++;
+        
+        //update database to store the address of the user who casted vote
+        emit Voted(msg.sender, _candidateId);
     }
 
-    function getEmail() public view returns (string memory) {
-        require(bytes(emails[msg.sender]).length > 0, "Email not registered");
-        return emails[msg.sender];
+    
+    function getVotes(uint _candidateId) public view returns (uint) {
+        return votes[_candidateId];
     }
 
+    
+    function isOwner(address user) public view returns (bool) {
+        return user == owner;
+    }
+
+    
     function getAllCandidates() public view returns (Candidate[] memory) {
-        uint count = candidateIDs.length;
-        Candidate[] memory allCandidates = new Candidate[](count);
+        Candidate[] memory allCandidates = new Candidate[](candidateCount);
         uint index = 0;
 
-        for (uint i = 0; i < count; i++) {
-            uint id = candidateIDs[i];
-            if (candidateExists[id]) {
-                allCandidates[index] = candidates[id];
+       
+        for (uint i = 0; i < candidateCount; i++) {
+            if (candidateExists[i]) {
+                allCandidates[index] = candidates[i];
                 index++;
             }
         }
 
         return allCandidates;
-    }
-
-    function getCandidateCount() public view returns (uint) {
-        return candidateIDs.length;
     }
 }
