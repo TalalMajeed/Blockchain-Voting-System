@@ -12,7 +12,7 @@ export default function Cast() {
       <p>Account: {account}</p>
       <p>Email: {email}</p>
       <p>Phone: {phone}</p>
-      <h1>display candidates here</h1>
+      <h1>Candidates displayed here</h1>
     </div>
   );
 }

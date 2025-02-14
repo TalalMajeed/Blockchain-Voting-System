@@ -1,7 +1,6 @@
 "use client";
 
 import { Layout, Typography, Button } from "antd";
-import Link from "next/link";
 
 import Image from "next/image";
 

@@ -6,16 +6,16 @@ import { Button } from "antd";
 import Link from "next/link";
 
 import { usePathname } from "next/navigation";
-import { Poppins } from "next/font/google";
+//import { Poppins } from "next/font/google";
 import { Web3Provider } from "../context/Web3Context";
 import { UserProvider } from "../context/UserContext";
 
-const poppins = Poppins({
+/*const poppins = Poppins({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   variable: "--font-poppins",
 });
-
+*/
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -32,7 +32,7 @@ export default function RootLayout({
         },
       }}
     >
-      <html lang="en" className={poppins.variable}>
+      <html lang="en">
         <head>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
