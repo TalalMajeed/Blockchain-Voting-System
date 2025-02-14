@@ -146,6 +146,7 @@ function Account() {
         htmlType="submit"
         className="w-[100%] rounded-[5px] h-[50px]"
         href="https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en"
+        target="_blank"
       >
         Install MetaMask
       </Button>
