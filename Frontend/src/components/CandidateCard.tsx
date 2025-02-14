@@ -3,8 +3,7 @@
 
 import React from "react";
 import { Card, Button, Avatar } from "antd";
-import { StarOutlined } from "@ant-design/icons";
-import {UserOutlined} from "@ant-design/icons";
+import { StarOutlined, UserOutlined } from "@ant-design/icons";
 
 interface CandidateCardProps {
   id: number;
@@ -15,7 +14,8 @@ interface CandidateCardProps {
 const CandidateCard: React.FC<CandidateCardProps> = ({ id, name, votes }) => {
   return (
     <Card
-      bordered={false}
+      bordered={true}
+      hoverable
       style={{
         width: 270,
         borderRadius: 15,
@@ -23,48 +23,41 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ id, name, votes }) => {
         textAlign: "center",
         overflow: "hidden",
         position: "relative",
+        transition: "transform 0.3s ease, box-shadow 0.3s ease",
+      }}
+
+      // ✨ Hover effect: Move up slightly & add shadow
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLElement).style.transform = "translateY(-5px)";
+        (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 16px rgba(0,0,0,0.15)";
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+        (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 8px rgba(0,0,0,0.1)";
       }}
     >
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "20%",
-          backgroundColor: "#3dbf71",
-          borderTopLeftRadius: 15,
-          borderTopRightRadius: 15,
-        }}
-      />
 
+
+      {/* Profile Picture */}
       <Avatar
         size={100}
-        icon={<UserOutlined color="white" />}
+        icon={<UserOutlined />}
         style={{
           position: "absolute",
           top: "20%",
           left: "50%",
           transform: "translate(-50%, -50%)",
           border: "4px solid white",
-          outline: "4px solid #3dbf71",
           backgroundColor: "#3dbf71",
-          color: "white", 
-          fontSize: 48, 
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          outline: "4px solid #3dbf71",
         }}
       />
 
+      {/* Candidate Info */}
       <div style={{ marginTop: 110 }}>
-        <div style={{marginBottom: 50}}>
-        <h3 style={{ fontWeight: 600, fontSize: "20px" }}>
+        <h3 style={{ fontWeight: 600, marginBottom: 70, fontSize: "20px" }}>
           {name}
         </h3>
-        <p style={{fontSize: "14px", color: "rgba(0,0,0,0.6)"}}>id: {id} </p>
-        </div>
-        
 
         <div
           style={{
@@ -101,4 +94,3 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ id, name, votes }) => {
 };
 
 export default CandidateCard;
-
