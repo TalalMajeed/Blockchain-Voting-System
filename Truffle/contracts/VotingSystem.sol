@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
+pragma experimental ABIEncoderV2;
 
 contract VotingSystem {
     struct Candidate {
@@ -23,7 +24,7 @@ contract VotingSystem {
     event CandidateRemoved(uint id, string name);
     event Voted(address voter, uint candidateId);
 
-    constructor() {
+    constructor() public{
         owner = msg.sender;
         candidateCount = 0;
     }
