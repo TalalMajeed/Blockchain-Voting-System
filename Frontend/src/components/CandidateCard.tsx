@@ -9,9 +9,10 @@ interface CandidateCardProps {
   id: number;
   name: string;
   votes: number;
+  onVote: (id: number) => void; 
 }
 
-const CandidateCard: React.FC<CandidateCardProps> = ({ id, name, votes }) => {
+const CandidateCard: React.FC<CandidateCardProps> = ({ id, name, votes, onVote }) => {
   return (
     <Card
       bordered={true}
@@ -79,6 +80,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ id, name, votes }) => {
             backgroundColor: "#3dbf71",
             border: "none",
           }}
+          onClick={() => onVote(id)} 
         >
           Vote
         </Button>

@@ -12,13 +12,10 @@ interface Candidate {
   name: string;
   votes: number;
 }
-//ToDO: 1) do not allow anyone other than owner to access this page
-//2) set inputs to empty after successful transaction
 export default function Admin() {
 
-  //switch back to account from useWeb3
-  const account = process.env.NEXT_PUBLIC_OWNER_ADDRESS;
-  const { web3 } = useWeb3();
+  const owner = process.env.NEXT_PUBLIC_OWNER_ADDRESS;
+  const { web3, account } = useWeb3();
   const [candidate, setCandidate] = useState("");
   const [id, setID] = useState("");
   const [txData, setTxData] = useState<any>(null);
@@ -28,6 +25,30 @@ export default function Admin() {
   const [messageApi, contextHolder] = message.useMessage();
   const [updated, setIsUpdated] = useState(false);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
+  const [isOwner, setIsOwner] = useState(false);
+
+  useEffect(() => {
+    const checkOwnership = async () => {
+      if (!web3 || !account) return;
+      try {
+        const ownerAddress = owner?.toLowerCase();
+        const accountAddress = account.toLowerCase();
+        setIsOwner(ownerAddress === accountAddress);
+      } catch (error) {
+        console.error("Error checking ownership:", error);
+      }
+    };
+  
+    checkOwnership();
+  }, [web3, account]);
+
+  useEffect(() => {
+    if(updated){
+      fetchCandidates();
+      setIsUpdated(false);
+    }
+  }, [updated]);
+
 
     const fetchCandidates = async () => {
       if (!web3) return;
@@ -37,7 +58,7 @@ export default function Admin() {
         
         const formattedCandidates = Array.isArray(candidatesData)
           ? candidatesData.map((c: any, index: number) => ({
-              id: index + 1,
+              id: Number(c.id),
               name: c.name,
               votes: Number(c.voteCount),
             }))
@@ -49,11 +70,6 @@ export default function Admin() {
         console.error("Failed to fetch candidates:", error);
       }
     };
-    
-  
-    useEffect(() => {
-      fetchCandidates();
-    }, [web3, updated]);
 
   const addCandidate = async () => {
     console.log("add candidate triggered");
@@ -75,6 +91,10 @@ export default function Admin() {
       setIsUpdated(true);
       setTxData(tx);
       setIsModalVisible(true);
+
+      if(tx.status){
+        setCandidate("");
+      }
     } catch (error: any) {
       console.error("Transaction failed:", error);
       messageApi.error("Failed to add candidate.");
@@ -106,6 +126,8 @@ export default function Admin() {
         messageApi.success("Candidate removed successfully.");
         setTxData(tx);
         setIsModalVisible(true);
+
+        setID("");
       }
     } catch (error: any) {
       console.error("Transaction failed:", error);
@@ -124,6 +146,9 @@ export default function Admin() {
   };
 
   return (
+    <>
+    {contextHolder}
+    {!isOwner ? ( <p className="text-center text-red-500 text-lg">You are not authorised to access this page.</p> ) : (
     <Layout className="min-h-screen flex flex-col font-sans bg-gray-100 p-10">
       {contextHolder}
       <h1 className="text-center text-3xl font-bold text-gray-800 mt-5 mb-3">
@@ -205,7 +230,7 @@ export default function Admin() {
                 key={candidate.id} 
                 style={{ display: "flex", justifyContent: "space-around"}}
               >
-                 <AdminDisplayCard id={candidate.id} name={candidate.name} votes={isNaN(candidate.votes) ? 0 : candidate.votes} />
+                 <AdminDisplayCard id={candidate.id + 1} name={candidate.name} votes={isNaN(candidate.votes) ? 0 : candidate.votes} />
               </Col>
             ))}
           </Row>
@@ -272,5 +297,7 @@ export default function Admin() {
         )}
       </Modal>
     </Layout>
+    )}
+    </>
   );
 }

@@ -185,6 +185,8 @@ function Account() {
             if(account){
               //push to admin panel instead of voter if user is owner
               if(account && ownerAddress && account.toLowerCase() === ownerAddress.toLowerCase()){
+                console.log("Owner Address from login: ", ownerAddress);
+                console.log("Requesting Address from login: ", account);
                 router.push("/panel/admin");
               }
               else{
