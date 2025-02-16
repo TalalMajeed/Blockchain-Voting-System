@@ -29,7 +29,6 @@ export default function Admin() {
   const [updated, setIsUpdated] = useState(false);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
 
-    // Fetch candidates from contract
     const fetchCandidates = async () => {
       if (!web3) return;
       try {
@@ -43,8 +42,9 @@ export default function Admin() {
               votes: Number(c.voteCount),
             }))
           : [];
-    
-        setCandidates(formattedCandidates);
+        
+          const cleanedCandidates = formattedCandidates.filter((candidate) => candidate.name !== "");
+        setCandidates(cleanedCandidates);
       } catch (error) {
         console.error("Failed to fetch candidates:", error);
       }
@@ -87,12 +87,12 @@ export default function Admin() {
       console.error("Web3 or account not found");
       return;
     }
-    if (!id.trim() || isNaN(parseInt(id))) {
+    if (!id.trim() || isNaN(parseInt(id)) || parseInt(id) < 1) {
       messageApi.error("Please enter a valid candidate ID.");
       return;
     }
     try {
-      const candidateId = parseInt(id);
+      const candidateId = parseInt(id) - 1;
       const contract = getContractInstance(web3);
       const tx = await contract.methods
         .removeCandidate(candidateId)
@@ -195,18 +195,17 @@ export default function Admin() {
             {updated ? "Updated" : "Current"} List of Candidates
           </Title>
           
-          {/* Ensure Row is not compressed */}
-          <Row gutter={[32, 32]} justify="center" >
+          <Row gutter={[32, 32]} justify="space-between" >
             {candidates.map((candidate) => (
               <Col 
                 xs={24} 
                 sm={12} 
                 md={8} 
-                lg={10} 
+                lg={6} 
                 key={candidate.id} 
                 style={{ display: "flex", justifyContent: "center"}}
               >
-                  <AdminDisplayCard id={candidate.id} name={candidate.name} votes={candidate.votes} />
+                 <AdminDisplayCard id={candidate.id} name={candidate.name} votes={isNaN(candidate.votes) ? 0 : candidate.votes} />
               </Col>
             ))}
           </Row>
