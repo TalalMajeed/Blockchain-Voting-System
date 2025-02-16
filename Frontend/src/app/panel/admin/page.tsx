@@ -1,11 +1,26 @@
 "use client";
-import { Button, Layout, Modal, message } from "antd";
+import { Button, Layout, Modal, message, Row, Col, Typography } from "antd";
 import { useState } from "react";
 import { useWeb3 } from "@/context/Web3Context";
 import { getContractInstance } from "@/utils/contract";
-const { Content, Footer } = Layout;
+const { Content, Footer} = Layout;
+const { Title } = Typography;
+import AdminDisplayCard from "@/components/AdminDisplayCard";
 
+interface Candidate {
+  id: number;
+  name: string;
+  votes: number;
+}
+//ToDO: 1) do not allow anyone other than owner to access this page
+//2) set inputs to empty after successful transaction
 export default function Admin() {
+  const candidates: Candidate[] = [
+    { id: 1, name: "John Doe", votes: 320 },
+    { id: 2, name: "Jane Smith", votes: 210 },
+    { id: 3, name: "Alex Johnson", votes: 150 },
+    { id: 4, name: "Emily Davis", votes: 275 },
+  ];
   //switch back to account from useWeb3
   const account = process.env.NEXT_PUBLIC_OWNER_ADDRESS;
   const { web3 } = useWeb3();
@@ -14,7 +29,9 @@ export default function Admin() {
   const [txData, setTxData] = useState<any>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [removeError, setRemoveError] = useState<string>("");
+  const [addError, setAddError] = useState<string>("");
   const [messageApi, contextHolder] = message.useMessage();
+  const [updated, setIsUpdated] = useState(false);
 
   const addCandidate = async () => {
     console.log("add candidate triggered");
@@ -24,7 +41,7 @@ export default function Admin() {
       return;
     }
     if (!candidate.trim()) {
-      console.error("Candidate name cannot be empty");
+      setAddError("Candidate name cannot be empty.");
       return;
     }
     try {
@@ -33,6 +50,7 @@ export default function Admin() {
         .addCandidate(candidate.trim())
         .send({ from: account });
       console.log("Transaction successful:", tx);
+      setIsUpdated(true);
       setTxData(tx);
       setIsModalVisible(true);
     } catch (error: any) {
@@ -58,13 +76,14 @@ export default function Admin() {
         .removeCandidate(candidateId)
         .send({ from: account });
       console.log("Transaction receipt:", tx);
-      setTxData(tx);
-      setIsModalVisible(true);
       if (!tx.status) {
         setRemoveError("Candidate does not exist.");
         messageApi.error("Candidate does not exist.");
       } else {
+        setIsUpdated(true);
         messageApi.success("Candidate removed successfully.");
+        setTxData(tx);
+        setIsModalVisible(true);
       }
     } catch (error: any) {
       console.error("Transaction failed:", error);
@@ -88,7 +107,7 @@ export default function Admin() {
       <h1 className="text-center text-3xl font-bold text-gray-800 mt-5 mb-3">
         Admin Dashboard
       </h1>
-      <p className="text-center text-gray-500 text-sm">
+      <p className="text-center text-gray-500 text-sm mb-20">
         You are authorised to make the following changes to the voting system.
       </p>
       <Content className="flex-grow flex flex-col items-center justify-center gap-10 md:flex-row">
@@ -110,6 +129,9 @@ export default function Admin() {
             >
               Add
             </Button>
+            {addError && (
+              <p style={{ color: "red", fontSize: "16px" }}>{addError}</p>
+            )}
           </div>
         </section>
         <section className="bg-white p-6 rounded-2xl shadow-lg w-80 text-center">
@@ -142,7 +164,24 @@ export default function Admin() {
             )}
           </div>
         </section>
-      </Content>
+        </Content>
+
+        <hr className="border-gray-300 mt-20 mb-5" />
+        <div style={{ maxWidth: "90%", margin: "20px auto", padding: "20px" }}>
+            <Title level={2} style={{ textAlign: "center", marginBottom: "30px" }}>
+            {updated ? "Updated" : "Current"} List of Candidates
+            </Title>
+
+            <Row gutter={[32, 32]} justify="center">
+              {candidates.map((candidate) => (
+            <Col xs={24} sm={12} md={8} lg={6} key={candidate.id} style={{ display: "flex", justifyContent: "center" }}>
+                <AdminDisplayCard id={candidate.id} name={candidate.name} votes={candidate.votes} />
+            </Col>
+          ))}
+          </Row>
+        </div>
+        
+      
 
       <Footer className="text-center text-base font-light text-gray-600 mt-10 hidden md:block">
         Voting System ©2025 | All Rights Reserved

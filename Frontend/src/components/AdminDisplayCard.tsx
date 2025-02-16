@@ -2,16 +2,16 @@
 "use client";
 
 import React from "react";
-import { Card, Button, Avatar } from "antd";
-import { StarOutlined, UserOutlined } from "@ant-design/icons";
+import { Card } from "antd";
+import { StarOutlined } from "@ant-design/icons";
 
-interface CandidateCardProps {
+interface AdminDisplayCardProps {
   id: number;
   name: string;
   votes: number;
 }
 
-const CandidateCard: React.FC<CandidateCardProps> = ({ id, name, votes }) => {
+const AdminDisplayCard: React.FC<AdminDisplayCardProps> = ({ id, name, votes }) => {
   return (
     <Card
       bordered={true}
@@ -25,6 +25,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ id, name, votes }) => {
         position: "relative",
         transition: "transform 0.3s ease, box-shadow 0.3s ease",
       }}
+
       onMouseEnter={(e) => {
         (e.currentTarget as HTMLElement).style.transform = "translateY(-5px)";
         (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 16px rgba(0,0,0,0.15)";
@@ -34,24 +35,12 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ id, name, votes }) => {
         (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 8px rgba(0,0,0,0.1)";
       }}
     >
-      <Avatar
-        size={100}
-        icon={<UserOutlined />}
-        style={{
-          position: "absolute",
-          top: "20%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          border: "4px solid white",
-          backgroundColor: "#3dbf71",
-          outline: "4px solid #3dbf71",
-        }}
-      />
 
-      <div style={{ marginTop: 110 }}>
-        <h3 style={{ fontWeight: 600, marginBottom: 70, fontSize: "20px" }}>
+      <div style={{ marginTop: 20 }}>
+        <h3 style={{ fontWeight: 600, marginBottom: 10, fontSize: "20px" }}>
           {name}
         </h3>
+        <p style={{fontSize:"14px", marginBottom: 60, color: "rgba(0,0,0,0.6)"}}>Candidate id: {id}</p>
 
         <div
           style={{
@@ -68,23 +57,9 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ id, name, votes }) => {
             </p>
           </div>
         </div>
-
-        <Button
-          type="primary"
-          shape="round"
-          size="large"
-          style={{
-            marginTop: 20,
-            width: "80%",
-            backgroundColor: "#3dbf71",
-            border: "none",
-          }}
-        >
-          Vote
-        </Button>
       </div>
     </Card>
   );
 };
 
-export default CandidateCard;
+export default AdminDisplayCard;
