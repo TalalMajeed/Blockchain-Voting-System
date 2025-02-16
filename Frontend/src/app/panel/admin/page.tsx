@@ -203,7 +203,7 @@ export default function Admin() {
                 md={8} 
                 lg={6} 
                 key={candidate.id} 
-                style={{ display: "flex", justifyContent: "center"}}
+                style={{ display: "flex", justifyContent: "space-around"}}
               >
                  <AdminDisplayCard id={candidate.id} name={candidate.name} votes={isNaN(candidate.votes) ? 0 : candidate.votes} />
               </Col>

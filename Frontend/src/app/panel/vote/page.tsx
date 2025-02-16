@@ -1,9 +1,9 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useWeb3 } from "../../../context/Web3Context";
-import { useUser } from "../../../context/UserContext";
 import CandidateCard from "@/components/CandidateCard";
 import { Row, Col, Typography } from "antd";
+import { getContractInstance } from "@/utils/contract";
 
 const { Title } = Typography;
 
@@ -13,22 +13,38 @@ interface Candidate {
   votes: number;
 }
 
-//dummy data for designing page layout
-const candidates: Candidate[] = [
-  { id: 1, name: "John Doe", votes: 320 },
-  { id: 2, name: "Jane Smith", votes: 210 },
-  { id: 3, name: "Alex Johnson", votes: 150 },
-  { id: 4, name: "Emily Davis", votes: 275 },
-];
-
 const Cast: React.FC = () => {
-  const { web3, account } = useWeb3();
-  const { email, phone } = useUser();
+  const { web3 } = useWeb3();
+  const [candidates, setCandidates] = useState<Candidate[]>([]);
+  const fetchCandidates = useCallback(async () => {
+    if (!web3) return;
+    try {
+      const contract = getContractInstance(web3);
+      const candidatesData = await contract.methods.getAllCandidates().call();
+      
+      const formattedCandidates = Array.isArray(candidatesData)
+        ? candidatesData.map((c: any, index: number) => ({
+            id: index + 1,
+            name: c.name,
+            votes: Number(c.voteCount),
+          }))
+        : [];
+      
+      const cleanedCandidates = formattedCandidates.filter((candidate) => candidate.name !== "");
+      setCandidates(cleanedCandidates);
+    } catch (error) {
+      console.error("Failed to fetch candidates:", error);
+    }
+  }, [web3]);
+
+  useEffect(() => {
+    fetchCandidates();
+  }, [fetchCandidates]);
 
   return (
     <div style={{ maxWidth: "90%", margin: "20px auto", padding: "20px" }}>
       <Title level={2} style={{ textAlign: "center", marginBottom: "30px" }}>
-        All Candidates
+        {candidates.length > 0 ? "All Candidates" : "No Candidates"}
       </Title>
 
       <Row gutter={[32, 32]} justify="center">
