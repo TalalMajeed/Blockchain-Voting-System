@@ -1,6 +1,6 @@
 "use client";
 import { Button, Layout, Modal, message, Row, Col, Typography } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useWeb3 } from "@/context/Web3Context";
 import { getContractInstance } from "@/utils/contract";
 const { Content, Footer} = Layout;
@@ -15,12 +15,7 @@ interface Candidate {
 //ToDO: 1) do not allow anyone other than owner to access this page
 //2) set inputs to empty after successful transaction
 export default function Admin() {
-  const candidates: Candidate[] = [
-    { id: 1, name: "John Doe", votes: 320 },
-    { id: 2, name: "Jane Smith", votes: 210 },
-    { id: 3, name: "Alex Johnson", votes: 150 },
-    { id: 4, name: "Emily Davis", votes: 275 },
-  ];
+
   //switch back to account from useWeb3
   const account = process.env.NEXT_PUBLIC_OWNER_ADDRESS;
   const { web3 } = useWeb3();
@@ -32,6 +27,33 @@ export default function Admin() {
   const [addError, setAddError] = useState<string>("");
   const [messageApi, contextHolder] = message.useMessage();
   const [updated, setIsUpdated] = useState(false);
+  const [candidates, setCandidates] = useState<Candidate[]>([]);
+
+    // Fetch candidates from contract
+    const fetchCandidates = async () => {
+      if (!web3) return;
+      try {
+        const contract = getContractInstance(web3);
+        const candidatesData = await contract.methods.getAllCandidates().call();
+        
+        const formattedCandidates = Array.isArray(candidatesData)
+          ? candidatesData.map((c: any, index: number) => ({
+              id: index + 1,
+              name: c.name,
+              votes: Number(c.voteCount),
+            }))
+          : [];
+    
+        setCandidates(formattedCandidates);
+      } catch (error) {
+        console.error("Failed to fetch candidates:", error);
+      }
+    };
+    
+  
+    useEffect(() => {
+      fetchCandidates();
+    }, [web3, updated]);
 
   const addCandidate = async () => {
     console.log("add candidate triggered");
@@ -167,19 +189,31 @@ export default function Admin() {
         </Content>
 
         <hr className="border-gray-300 mt-20 mb-5" />
-        <div style={{ maxWidth: "90%", margin: "20px auto", padding: "20px" }}>
-            <Title level={2} style={{ textAlign: "center", marginBottom: "30px" }}>
+        {candidates.length > 0 ? (
+          <div style={{ maxWidth: "90%", margin: "20px auto", padding: "20px" }}>
+          <Title level={2} style={{ textAlign: "center", marginBottom: "30px" }}>
             {updated ? "Updated" : "Current"} List of Candidates
-            </Title>
-
-            <Row gutter={[32, 32]} justify="center">
-              {candidates.map((candidate) => (
-            <Col xs={24} sm={12} md={8} lg={6} key={candidate.id} style={{ display: "flex", justifyContent: "center" }}>
-                <AdminDisplayCard id={candidate.id} name={candidate.name} votes={candidate.votes} />
-            </Col>
-          ))}
+          </Title>
+          
+          {/* Ensure Row is not compressed */}
+          <Row gutter={[32, 32]} justify="center" >
+            {candidates.map((candidate) => (
+              <Col 
+                xs={24} 
+                sm={12} 
+                md={8} 
+                lg={10} 
+                key={candidate.id} 
+                style={{ display: "flex", justifyContent: "center"}}
+              >
+                  <AdminDisplayCard id={candidate.id} name={candidate.name} votes={candidate.votes} />
+              </Col>
+            ))}
           </Row>
         </div>
+      ) : (
+        <p className="text-center text-gray-600 text-lg">No candidates yet.</p>
+      )}
         
       
 
