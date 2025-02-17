@@ -6,6 +6,7 @@ import { useWeb3 } from "../../../context/Web3Context";
 import CandidateCard from "@/components/CandidateCard";
 import { Row, Col, Typography, message, Modal, Button } from "antd";
 import { getContractInstance } from "@/utils/contract";
+import Link from "next/link";
 
 const { Title } = Typography;
 
@@ -22,11 +23,18 @@ const Cast: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [txData, setTxData] = useState<any>(null);
   const [messageApi, contextHolder] = message.useMessage();
+  const [hasVoted, setHasVoted] = useState(false);
 
+  //TODO: checkIfVoted function that checks for accounts that have voted in the backend
+  //useEffect to checkifVoted
   const voteCandidate = async (candidateId: number) => {
     const candidateIndex = candidateId - 1;
-    if (!web3 || !account) {
+    if (!web3 || !account ) {
       messageApi.error("Web3 or account not found.");
+      return;
+    }
+    if(hasVoted){
+      messageApi.error("You have already voted");
       return;
     }
 
@@ -43,6 +51,8 @@ const Cast: React.FC = () => {
         messageApi.success("Vote cast successfully.");
         setTxData(tx);
         setIsModalVisible(true);
+        setHasVoted(true);
+        setIsUpdated(false);
       }
     } catch (error: any) {
       console.error("Transaction failed:", error);
@@ -52,7 +62,7 @@ const Cast: React.FC = () => {
 
   const fetchCandidates = useCallback(async () => {
     if (!web3) return;
-
+    if(hasVoted) return;
     try {
       const contract = getContractInstance(web3);
       const candidatesData = await contract.methods.getAllCandidates().call();
@@ -61,7 +71,7 @@ const Cast: React.FC = () => {
         ? candidatesData.map((c: any, index: number) => ({
             id: Number(c.id),
             name: c.name,
-            votes: Number(c.voteCount),
+            votes: Number(c.votes),
           }))
         : [];
 
@@ -70,7 +80,7 @@ const Cast: React.FC = () => {
     } catch (error) {
       console.error("Failed to fetch candidates:", error);
     }
-  }, [web3]);
+  }, [web3, hasVoted]);
 
   useEffect(() => {
     fetchCandidates();
@@ -82,7 +92,20 @@ const Cast: React.FC = () => {
 
   return (
     <>
-      {contextHolder}
+    {contextHolder}
+    {hasVoted ? ( <div style={{ textAlign: "center", marginTop: "20px" }}>
+    <p style={{ fontSize: "18px", fontWeight: "bold" }}>
+      Your vote has been casted and you can no longer access the voting panel.
+    </p>
+    <Link href="/" >
+      <p style={{ fontSize: "16px", color: "blue", textDecoration: "underline", cursor: "pointer" }}>
+        Go back to home
+      </p>
+    </Link>
+  </div>
+    ) : (
+      <>
+      
       <div style={{ maxWidth: "90%", margin: "20px auto", padding: "20px" }}>
         <Title level={2} style={{ textAlign: "center", marginBottom: "30px" }}>
           {candidates.length > 0 ? "All Candidates" : "No Candidates"}
@@ -122,6 +145,8 @@ const Cast: React.FC = () => {
           <p style={{ fontSize: "16px" }}>No transaction details available.</p>
         )}
       </Modal>
+    </>
+    )}
     </>
   );
 };
