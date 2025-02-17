@@ -60,7 +60,7 @@ export default function Admin() {
           ? candidatesData.map((c: any, index: number) => ({
               id: Number(c.id),
               name: c.name,
-              votes: Number(c.voteCount),
+              votes: Number(c.votes),
             }))
           : [];
         
