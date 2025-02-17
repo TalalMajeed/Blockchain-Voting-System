@@ -43,6 +43,12 @@ export default function Admin() {
   }, [web3, account]);
 
   useEffect(() => {
+    if(web3 && account){
+      fetchCandidates();
+    }
+  }, [web3, account]);
+
+  useEffect(() => {
     if(updated){
       fetchCandidates();
       setIsUpdated(false);
