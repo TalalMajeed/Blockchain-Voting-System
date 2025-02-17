@@ -2,8 +2,8 @@
 "use client";
 
 import React from "react";
-import { Card, Button, Avatar } from "antd";
-import { StarOutlined, UserOutlined } from "@ant-design/icons";
+import { Card, Button} from "antd";
+import { StarOutlined} from "@ant-design/icons";
 
 interface CandidateCardProps {
   id: number;
@@ -35,21 +35,8 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ id, name, votes, onVote }
         (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 8px rgba(0,0,0,0.1)";
       }}
     >
-      <Avatar
-        size={100}
-        icon={<UserOutlined />}
-        style={{
-          position: "absolute",
-          top: "20%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          border: "4px solid white",
-          backgroundColor: "#3dbf71",
-          outline: "4px solid #3dbf71",
-        }}
-      />
 
-      <div style={{ marginTop: 110 }}>
+      <div >
         <h3 style={{ fontWeight: 600, marginBottom: 70, fontSize: "20px" }}>
           {name}
         </h3>
