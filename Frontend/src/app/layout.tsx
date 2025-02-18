@@ -1,10 +1,8 @@
 "use client";
 import "../styles/globals.css";
 import { ConfigProvider } from "antd";
-
 import { Button } from "antd";
 import Link from "next/link";
-
 import { usePathname } from "next/navigation";
 import { Poppins } from "next/font/google";
 import { Web3Provider } from "../context/Web3Context";
@@ -12,15 +10,15 @@ import { UserProvider } from "../context/UserContext";
 
 const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  weight: [
+    "100", "200", "300", "400", "500", "600", "700", "800", "900"
+  ],
   variable: "--font-poppins",
 });
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   const pathname = usePathname();
 
   return (
@@ -32,7 +30,7 @@ export default function RootLayout({
         },
       }}
     >
-      <html lang="en" className={poppins.variable}>
+      <html lang="en" className={poppins.className}>
         <head>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -40,7 +38,7 @@ export default function RootLayout({
           <title>Blockchain Voting System</title>
           <link rel="icon" href="/logo.png" />
         </head>
-        <body className={`font-sans antialiased flex min-h-screen flex-col`}>
+        <body className="antialiased flex min-h-screen flex-col">
           <Web3Provider>
             <UserProvider>
               {!pathname.includes("login") && (

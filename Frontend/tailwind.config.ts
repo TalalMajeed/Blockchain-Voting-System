@@ -11,6 +11,7 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        customGreen: "#3dbf71",
       },
       fontFamily: {
         sans: ["var(--font-poppins)", "sans-serif"],

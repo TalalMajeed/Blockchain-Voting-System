@@ -101,6 +101,9 @@ function Account() {
 
   const router = useRouter();
 
+  //testing owner functionality
+  const ownerAddress = process.env.NEXT_PUBLIC_OWNER_ADDRESS;
+
   useEffect(() => {
     if (typeof window !== "undefined" && (window as any).ethereum) {
       const web3Instance = new Web3((window as any).ethereum);
@@ -179,7 +182,18 @@ function Account() {
           className="w-[100%] rounded-[5px] h-[50px]"
           disabled={!account}
           onClick={() => {
-            router.push("/panel/vote");
+            if(account){
+              //push to admin panel instead of voter if user is owner
+              if(account && ownerAddress && account.toLowerCase() === ownerAddress.toLowerCase()){
+                console.log("Owner Address from login: ", ownerAddress);
+                console.log("Requesting Address from login: ", account);
+                router.push("/panel/admin");
+              }
+              else{
+                router.push("/panel/vote");
+              }
+            }
+           
           }}
         >
           Continue

@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import Web3 from "web3";
 
 interface UserContextType {
   email: string | null;

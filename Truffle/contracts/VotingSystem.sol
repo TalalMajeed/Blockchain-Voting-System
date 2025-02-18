@@ -1,14 +1,15 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity >=0.4.22 <0.9.0;
+pragma experimental ABIEncoderV2;
 
 contract VotingSystem {
     struct Candidate {
         string name;
         uint id;
+        uint votes;
     }
 
     mapping(uint => Candidate) public candidates;
-    mapping(uint => uint) public votes; 
     mapping(uint => bool) private candidateExists;
 
     uint public candidateCount;
@@ -23,7 +24,7 @@ contract VotingSystem {
     event CandidateRemoved(uint id, string name);
     event Voted(address voter, uint candidateId);
 
-    constructor() {
+    constructor() public{
         owner = msg.sender;
         candidateCount = 0;
     }
@@ -33,7 +34,7 @@ contract VotingSystem {
         require(bytes(_name).length > 0, "Candidate name cannot be empty");
 
         uint newId = candidateCount; 
-        candidates[newId] = Candidate(_name, newId);
+        candidates[newId] = Candidate(_name, newId, 0);
         candidateExists[newId] = true;
         candidateCount++; 
 
@@ -55,15 +56,10 @@ contract VotingSystem {
         require(candidateExists[_candidateId], "Candidate does not exist");
 
         
-        votes[_candidateId]++;
+        candidates[_candidateId].votes++;
         
         //update database to store the address of the user who casted vote
         emit Voted(msg.sender, _candidateId);
-    }
-
-    
-    function getVotes(uint _candidateId) public view returns (uint) {
-        return votes[_candidateId];
     }
 
     
