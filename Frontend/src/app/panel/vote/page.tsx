@@ -6,15 +6,10 @@ import { useWeb3 } from "../../../context/Web3Context";
 import CandidateCard from "@/components/CandidateCard";
 import { Row, Col, Typography, message, Modal, Button } from "antd";
 import { getContractInstance } from "@/utils/contract";
+import { fetchCandidatesUtil, Candidate } from "@/utils/fetchCandidates";
 import Link from "next/link";
 
 const { Title } = Typography;
-
-interface Candidate {
-  id: number;
-  name: string;
-  votes: number;
-}
 
 const Cast: React.FC = () => {
   const { web3, account } = useWeb3();
@@ -63,23 +58,8 @@ const Cast: React.FC = () => {
   const fetchCandidates = useCallback(async () => {
     if (!web3) return;
     if(hasVoted) return;
-    try {
-      const contract = getContractInstance(web3);
-      const candidatesData = await contract.methods.getAllCandidates().call();
-
-      const formattedCandidates = Array.isArray(candidatesData)
-        ? candidatesData.map((c: any, index: number) => ({
-            id: Number(c.id),
-            name: c.name,
-            votes: Number(c.votes),
-          }))
-        : [];
-
-      const cleanedCandidates = formattedCandidates.filter((candidate) => candidate.name !== "");
-      setCandidates(cleanedCandidates);
-    } catch (error) {
-      console.error("Failed to fetch candidates:", error);
-    }
+    const data = await fetchCandidatesUtil(web3);
+    setCandidates(data);
   }, [web3, hasVoted]);
 
   useEffect(() => {

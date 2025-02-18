@@ -6,12 +6,8 @@ import { getContractInstance } from "@/utils/contract";
 const { Content, Footer} = Layout;
 const { Title } = Typography;
 import AdminDisplayCard from "@/components/AdminDisplayCard";
+import { fetchCandidatesUtil, Candidate } from "@/utils/fetchCandidates";
 
-interface Candidate {
-  id: number;
-  name: string;
-  votes: number;
-}
 export default function Admin() {
 
   const owner = process.env.NEXT_PUBLIC_OWNER_ADDRESS;
@@ -44,38 +40,22 @@ export default function Admin() {
 
   useEffect(() => {
     if(web3 && account){
-      fetchCandidates();
+      (async () => {
+        const data = await fetchCandidatesUtil(web3);
+        setCandidates(data);
+      })();
     }
   }, [web3, account]);
 
   useEffect(() => {
     if(updated){
-      fetchCandidates();
-      setIsUpdated(false);
+      (async () => {
+        const data = await fetchCandidatesUtil(web3);
+        setCandidates(data);
+        setIsUpdated(false);
+      })();
     }
   }, [updated]);
-
-
-    const fetchCandidates = async () => {
-      if (!web3) return;
-      try {
-        const contract = getContractInstance(web3);
-        const candidatesData = await contract.methods.getAllCandidates().call();
-        
-        const formattedCandidates = Array.isArray(candidatesData)
-          ? candidatesData.map((c: any, index: number) => ({
-              id: Number(c.id),
-              name: c.name,
-              votes: Number(c.votes),
-            }))
-          : [];
-        
-          const cleanedCandidates = formattedCandidates.filter((candidate) => candidate.name !== "");
-        setCandidates(cleanedCandidates);
-      } catch (error) {
-        console.error("Failed to fetch candidates:", error);
-      }
-    };
 
   const addCandidate = async () => {
     console.log("add candidate triggered");
@@ -220,30 +200,6 @@ export default function Admin() {
         </Content>
 
         <hr className="border-gray-300 mt-20 mb-5" />
-       {/* {candidates.length > 0 ? (
-          <div style={{ maxWidth: "90%", margin: "20px auto", padding: "20px" }}>
-          <Title level={2} style={{ textAlign: "center", marginBottom: "30px" }}>
-            {updated ? "Updated" : "Current"} List of Candidates
-          </Title>
-          
-          <Row gutter={[32, 32]} justify="space-between" >
-            {candidates.map((candidate) => (
-              <Col 
-                xs={24} 
-                sm={12} 
-                md={8} 
-                lg={6} 
-                key={candidate.id} 
-                style={{ display: "flex", justifyContent: "space-around"}}
-              >
-                 <AdminDisplayCard id={candidate.id + 1} name={candidate.name} votes={isNaN(candidate.votes) ? 0 : candidate.votes} />
-              </Col>
-            ))}
-          </Row>
-        </div>
-      ) : (
-        <p className="text-center text-gray-600 text-lg">No candidates yet.</p>
-      )}*/}
       {candidates.length > 0 ? (
   <div style={{ width: "100%", maxWidth: "1200px", margin: "20px auto", padding: "20px" }}>
     <Title level={2} style={{ textAlign: "center", marginBottom: "30px" }}>
@@ -265,11 +221,6 @@ export default function Admin() {
 ) : (
   <p className="text-center text-gray-600 text-lg">No candidates yet.</p>
 )}
-
-
-        
-      
-
       <Footer className="text-center text-base font-light text-gray-600 mt-10 hidden md:block">
         Voting System ©2025 | All Rights Reserved
       </Footer>
