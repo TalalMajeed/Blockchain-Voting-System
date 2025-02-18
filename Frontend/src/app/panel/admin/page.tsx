@@ -220,7 +220,7 @@ export default function Admin() {
         </Content>
 
         <hr className="border-gray-300 mt-20 mb-5" />
-        {candidates.length > 0 ? (
+       {/* {candidates.length > 0 ? (
           <div style={{ maxWidth: "90%", margin: "20px auto", padding: "20px" }}>
           <Title level={2} style={{ textAlign: "center", marginBottom: "30px" }}>
             {updated ? "Updated" : "Current"} List of Candidates
@@ -243,7 +243,30 @@ export default function Admin() {
         </div>
       ) : (
         <p className="text-center text-gray-600 text-lg">No candidates yet.</p>
-      )}
+      )}*/}
+      {candidates.length > 0 ? (
+  <div style={{ width: "100%", maxWidth: "1200px", margin: "20px auto", padding: "20px" }}>
+    <Title level={2} style={{ textAlign: "center", marginBottom: "30px" }}>
+      {updated ? "Updated" : "Current"} List of Candidates
+    </Title>
+    
+    <Row gutter={[32, 32]} justify="center">
+      {candidates.map((candidate) => (
+        <Col xs={24} sm={12} md={8} lg={6} key={candidate.id}>
+          <AdminDisplayCard 
+            id={candidate.id + 1} 
+            name={candidate.name} 
+            votes={isNaN(candidate.votes) ? 0 : candidate.votes} 
+          />
+        </Col>
+      ))}
+    </Row>
+  </div>
+) : (
+  <p className="text-center text-gray-600 text-lg">No candidates yet.</p>
+)}
+
+
         
       
 
