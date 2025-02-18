@@ -6298,12 +6298,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x36fE85dF9633c4eA5F9BdDB564C52C8Fcb7681A3",
-      "transactionHash": "0x3c25204756a0c9b3db24b5b713b29f592808cbe36007004e8c8e151e8f8157f8"
+      "address": "0xbb0F8879B8b37a3ca243a21AAb5a3f2c2081759e",
+      "transactionHash": "0x4a2d74bc57e122ccd7cf8ebdbd7deccb14d320f65ffd5195102b9f5b168ec21f"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2025-02-18T07:42:43.081Z",
+  "updatedAt": "2025-02-18T14:27:02.145Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}

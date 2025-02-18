@@ -17,15 +17,9 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ id, name, votes, onVote }
     <Card
       bordered={true}
       hoverable
-      style={{
-        width: 270,
-        borderRadius: 15,
-        boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-        textAlign: "center",
-        overflow: "hidden",
-        position: "relative",
-        transition: "transform 0.3s ease, box-shadow 0.3s ease",
-      }}
+      
+      className="w-[270px] rounded-[15px] shadow-md text-center overflow-hidden relative transition-transform duration-300 ease-in-out hover:shadow-lg hover:scale-105"
+      
       onMouseEnter={(e) => {
         (e.currentTarget as HTMLElement).style.transform = "translateY(-5px)";
         (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 16px rgba(0,0,0,0.15)";
@@ -37,21 +31,16 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ id, name, votes, onVote }
     >
 
       <div >
-        <h3 style={{ fontWeight: 600, marginBottom: 70, fontSize: "20px" }}>
+        <h3  className="font-semibold mb-[70px] text-[20px]">
           {name}
         </h3>
 
         <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "20px",
-            marginTop: 20,
-          }}
+          className="flex justify-center gap-5 mt-5" //gap-20
         >
-          <div style={{ display: "flex", gap: "5px" }}>
-            <StarOutlined style={{ color: "#3dbf71", fontSize: 14 }} />
-            <p style={{ margin: 0, fontSize: "17px" }}>
+          <div className="flex gap-[5px]">
+            <StarOutlined className="text-[#3dbf71] text-[14px]" />
+            <p className="m-0 text-[17px]">
               <strong>Votes:</strong> {votes}
             </p>
           </div>
@@ -61,12 +50,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ id, name, votes, onVote }
           type="primary"
           shape="round"
           size="large"
-          style={{
-            marginTop: 20,
-            width: "80%",
-            backgroundColor: "#3dbf71",
-            border: "none",
-          }}
+          className="mt-5 w-4/5 bg-[#3dbf71] border-0"
           onClick={() => onVote(id)} 
         >
           Vote

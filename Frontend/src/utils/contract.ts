@@ -1,7 +1,7 @@
 import Web3 from "web3";
 import contractData from "./VotingSystem.json";
 
-const contractAddress = "0x36fE85dF9633c4eA5F9BdDB564C52C8Fcb7681A3";
+const contractAddress = "0xbb0F8879B8b37a3ca243a21AAb5a3f2c2081759e";
 const contractABI = contractData.abi;
 
 export const getContractInstance = (web3: Web3) => {

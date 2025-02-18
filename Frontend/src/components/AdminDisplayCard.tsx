@@ -16,16 +16,8 @@ const AdminDisplayCard: React.FC<AdminDisplayCardProps> = ({ id, name, votes }) 
     <Card
       bordered={true}
       hoverable
-      style={{
-        minWidth: 270,
-        maxWidth: 360,
-        borderRadius: 15,
-        boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-        textAlign: "center",
-        overflow: "hidden",
-        position: "relative",
-        transition: "transform 0.3s ease, box-shadow 0.3s ease",
-      }}
+
+      className="min-w-[270px] max-w-[360px] rounded-[15px] shadow-[0_4px_8px_rgba(0,0,0,0.1)] text-center overflow-hidden relative transition-[transform,box-shadow] duration-300 ease-in-out"
 
       onMouseEnter={(e) => {
         (e.currentTarget as HTMLElement).style.transform = "translateY(-5px)";
@@ -37,23 +29,18 @@ const AdminDisplayCard: React.FC<AdminDisplayCardProps> = ({ id, name, votes }) 
       }}
     >
 
-      <div style={{ marginTop: 20 }}>
-        <h3 style={{ fontWeight: 600, marginBottom: 10, fontSize: "20px" }}>
+      <div className="mt-5">
+        <h3 className="font-semibold mb-3 text-xl">
           {name}
         </h3>
-        <p style={{fontSize:"14px", marginBottom: 60, color: "rgba(0,0,0,0.6)"}}>Candidate id: {id}</p>
+        <p className="text-sm mb-14 text-[rgba(0,0,0,0.6)]">Candidate id: {id}</p>
 
         <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "20px",
-            marginTop: 20,
-          }}
+          className="flex justify-center gap-5 mt-5"
         >
-          <div style={{ display: "flex", gap: "5px" }}>
-            <StarOutlined style={{ color: "#3dbf71", fontSize: 14 }} />
-            <p style={{ margin: 0, fontSize: "17px" }}>
+          <div className="flex gap-[5px]">
+            <StarOutlined className="text-[#3dbf71] text-sm"/>
+            <p className="m-0 text-lg">
               <strong>Votes:</strong> {votes}
             </p>
           </div>
