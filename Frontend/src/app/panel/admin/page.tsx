@@ -163,7 +163,7 @@ export default function Admin() {
               Add
             </Button>
             {addError && (
-              <p style={{ color: "red", fontSize: "16px" }}>{addError}</p>
+              <p className="text-red-700 text-lg">{addError}</p>
             )}
           </div>
         </section>
@@ -193,7 +193,7 @@ export default function Admin() {
               Remove
             </Button>
             {removeError && (
-              <p style={{ color: "red", fontSize: "16px" }}>{removeError}</p>
+              <p className="text-red-700 text-lg">{removeError}</p>
             )}
           </div>
         </section>
@@ -201,8 +201,8 @@ export default function Admin() {
 
         <hr className="border-gray-300 mt-20 mb-5" />
       {candidates.length > 0 ? (
-  <div style={{ width: "100%", maxWidth: "1200px", margin: "20px auto", padding: "20px" }}>
-    <Title level={2} style={{ textAlign: "center", marginBottom: "30px" }}>
+  <div className="w-full max-w-[1200px] mx-auto my-5 p-5">
+    <Title level={2} className="text-center mb-12">
       {updated ? "Updated" : "Current"} List of Candidates
     </Title>
     
@@ -227,7 +227,7 @@ export default function Admin() {
       
       <Modal
         title={
-          <div style={{ fontSize: "24px", fontWeight: "bold" }}>
+          <div className="text-2xl font-bold">
             Transaction Details
           </div>
         }
@@ -242,38 +242,38 @@ export default function Admin() {
       >
         {txData ? (
           <div>
-            <p style={{ fontSize: "16px" }}>
+            <p className="text-lg">
               <strong>Transaction Hash:</strong> {txData.transactionHash}
             </p>
-            <p style={{ fontSize: "16px" }}>
+            <p className="text-lg">
               <strong>Block Hash:</strong> {txData.blockHash}
             </p>
-            <p style={{ fontSize: "16px" }}>
+            <p className="text-lg">
               <strong>Block Number:</strong>{" "}
               {txData.blockNumber ? txData.blockNumber.toString() : ""}
             </p>
-            <p style={{ fontSize: "16px" }}>
+            <p className="text-lg">
               <strong>Cumulative Gas Used:</strong>{" "}
               {txData.cumulativeGasUsed
                 ? txData.cumulativeGasUsed.toString()
                 : ""}
             </p>
-            <p style={{ fontSize: "16px" }}>
+            <p className="text-lg">
               <strong>Effective Gas Price:</strong>{" "}
               {txData.effectiveGasPrice
                 ? txData.effectiveGasPrice.toString()
                 : ""}
             </p>
-            <p style={{ fontSize: "16px" }}>
+            <p className="text-lg">
               <strong>From:</strong> {txData.from}
             </p>
-            <p style={{ fontSize: "16px" }}>
+            <p className="text-lg">
               <strong>Gas Used:</strong>{" "}
               {txData.gasUsed ? txData.gasUsed.toString() : ""}
             </p>
           </div>
         ) : (
-          <p style={{ fontSize: "16px" }}>No transaction details available.</p>
+          <p className="text-lg">No transaction details available.</p>
         )}
       </Modal>
     </Layout>
@@ -281,3 +281,4 @@ export default function Admin() {
     </>
   );
 }
+

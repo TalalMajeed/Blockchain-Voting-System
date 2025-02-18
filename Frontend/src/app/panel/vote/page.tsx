@@ -20,15 +20,13 @@ const Cast: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [hasVoted, setHasVoted] = useState(false);
 
-  //TODO: checkIfVoted function that checks for accounts that have voted in the backend
-  //useEffect to checkifVoted
   const voteCandidate = async (candidateId: number) => {
     const candidateIndex = candidateId - 1;
-    if (!web3 || !account ) {
+    if (!web3 || !account) {
       messageApi.error("Web3 or account not found.");
       return;
     }
-    if(hasVoted){
+    if (hasVoted) {
       messageApi.error("You have already voted");
       return;
     }
@@ -37,8 +35,6 @@ const Cast: React.FC = () => {
       const contract = getContractInstance(web3);
       const tx = await contract.methods.vote(candidateIndex).send({ from: account });
 
-      console.log("Transaction receipt:", tx);
-      
       if (!tx.status) {
         messageApi.error("Voting failed. Candidate may not exist.");
       } else {
@@ -50,14 +46,12 @@ const Cast: React.FC = () => {
         setIsUpdated(false);
       }
     } catch (error: any) {
-      console.error("Transaction failed:", error);
       messageApi.error(error.message.includes("Candidate does not exist") ? "Candidate does not exist." : "Transaction failed.");
     }
   };
 
   const fetchCandidates = useCallback(async () => {
-    if (!web3) return;
-    if(hasVoted) return;
+    if (!web3 || hasVoted) return;
     const data = await fetchCandidatesUtil(web3);
     setCandidates(data);
   }, [web3, hasVoted]);
@@ -72,61 +66,55 @@ const Cast: React.FC = () => {
 
   return (
     <>
-    {contextHolder}
-    {hasVoted ? ( <div style={{ textAlign: "center", marginTop: "20px" }}>
-    <p style={{ fontSize: "18px", fontWeight: "bold" }}>
-      Your vote has been casted and you can no longer access the voting panel.
-    </p>
-    <Link href="/" >
-      <p style={{ fontSize: "16px", color: "blue", textDecoration: "underline", cursor: "pointer" }}>
-        Go back to home
-      </p>
-    </Link>
-  </div>
-    ) : (
-      <>
-      
-      <div style={{ maxWidth: "90%", margin: "20px auto", padding: "20px" }}>
-        <Title level={2} style={{ textAlign: "center", marginBottom: "30px" }}>
-          {candidates.length > 0 ? "All Candidates" : "No Candidates"}
-        </Title>
+      {contextHolder}
+      {hasVoted ? (
+        <div className="text-center mt-5">
+          <p className="text-lg font-bold">
+            Your vote has been casted and you can no longer access the voting panel.
+          </p>
+          <Link href="/" className="text-base text-blue-600 underline cursor-pointer">
+            Go back to home
+          </Link>
+        </div>
+      ) : (
+        <>
+          <div className="max-w-5xl mx-auto mt-5 p-5">
+            <Title level={2} className="text-center mb-12">
+              {candidates.length > 0 ? "All Candidates" : "No Candidates"}
+            </Title>
 
-        <Row gutter={[32, 32]} justify="center">
-          {candidates.map((candidate) => (
-            <Col xs={24} sm={12} md={8} lg={6} key={candidate.id} style={{ display: "flex", justifyContent: "center" }}>
-              <CandidateCard id={candidate.id + 1} name={candidate.name} votes={isNaN(candidate.votes) ? 0 : candidate.votes} onVote={voteCandidate} />
-            </Col>
-          ))}
-        </Row>
-      </div>
-
-      <Modal
-        title={<div style={{ fontSize: "24px", fontWeight: "bold" }}>Transaction Details</div>}
-        open={isModalVisible}
-        onCancel={handleModalClose}
-        width={800}
-        footer={[
-          <Button key="close" onClick={handleModalClose}>
-            Close
-          </Button>,
-        ]}
-      >
-        {txData ? (
-          <div>
-            <p style={{ fontSize: "16px" }}><strong>Transaction Hash:</strong> {txData.transactionHash}</p>
-            <p style={{ fontSize: "16px" }}><strong>Block Hash:</strong> {txData.blockHash}</p>
-            <p style={{ fontSize: "16px" }}><strong>Block Number:</strong> {txData.blockNumber?.toString()}</p>
-            <p style={{ fontSize: "16px" }}><strong>Cumulative Gas Used:</strong> {txData.cumulativeGasUsed?.toString()}</p>
-            <p style={{ fontSize: "16px" }}><strong>Effective Gas Price:</strong> {txData.effectiveGasPrice?.toString()}</p>
-            <p style={{ fontSize: "16px" }}><strong>From:</strong> {txData.from}</p>
-            <p style={{ fontSize: "16px" }}><strong>Gas Used:</strong> {txData.gasUsed?.toString()}</p>
+            <Row gutter={[32, 32]} justify="center">
+              {candidates.map((candidate) => (
+                <Col xs={24} sm={12} md={8} lg={6} key={candidate.id} className="flex justify-center">
+                  <CandidateCard id={candidate.id + 1} name={candidate.name} votes={isNaN(candidate.votes) ? 0 : candidate.votes} onVote={voteCandidate} />
+                </Col>
+              ))}
+            </Row>
           </div>
-        ) : (
-          <p style={{ fontSize: "16px" }}>No transaction details available.</p>
-        )}
-      </Modal>
-    </>
-    )}
+
+          <Modal
+            title={<div className="text-2xl font-bold">Transaction Details</div>}
+            open={isModalVisible}
+            onCancel={handleModalClose}
+            width={800}
+            footer={[<Button key="close" onClick={handleModalClose}>Close</Button>]}
+          >
+            {txData ? (
+              <div>
+                <p className="text-lg"><strong>Transaction Hash:</strong> {txData.transactionHash}</p>
+                <p className="text-lg"><strong>Block Hash:</strong> {txData.blockHash}</p>
+                <p className="text-lg"><strong>Block Number:</strong> {txData.blockNumber?.toString()}</p>
+                <p className="text-lg"><strong>Cumulative Gas Used:</strong> {txData.cumulativeGasUsed?.toString()}</p>
+                <p className="text-lg"><strong>Effective Gas Price:</strong> {txData.effectiveGasPrice?.toString()}</p>
+                <p className="text-lg"><strong>From:</strong> {txData.from}</p>
+                <p className="text-lg"><strong>Gas Used:</strong> {txData.gasUsed?.toString()}</p>
+              </div>
+            ) : (
+              <p className="text-lg">No transaction details available.</p>
+            )}
+          </Modal>
+        </>
+      )}
     </>
   );
 };
