@@ -41,10 +41,17 @@ function sendWhatsAppMessage(phoneNumber: string, otp: string) {
   })
     .then((response) => response.json())
     .then((data) => {
+      //Check if it contains the error key
+      if (data.error) {
+        console.error("Error sending message:", data.error);
+        throw new Error(data.error);
+        return;
+      }
       console.log("Message sent successfully:", data);
     })
     .catch((error) => {
-      console.error("Error sending message:", error);
+      console.log("Sending Email OTP");
+      throw new Error(error);
     });
 }
 

@@ -19,6 +19,7 @@ router.post("/", async (req, res) => {
   }
 
   const status = await verifyOTP(code, { email, phone });
+  console.log("status", status);
 
   if (status) {
     try {

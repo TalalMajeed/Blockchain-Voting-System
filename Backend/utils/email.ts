@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 
 async function sendEmailUsingGmail(to: string, otp: string) {
-  const user = "m.talal.majeed@gmail.com";
+  const user = process.env.EMAIL_ID;
   const pass = process.env.EMAIL_SECRET;
   const subject = "OTP verification";
   const text = `Your OTP is: ${otp}`;

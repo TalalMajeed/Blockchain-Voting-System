@@ -45,9 +45,20 @@ export async function storeOTP(data: Object): Promise<string | void> {
 export async function verifyOTP(otp: string, data: Object): Promise<boolean> {
   return (await otpQueue.add(async () => {
     const stored = otpStorage.get(otp);
+    console.log("Verifying OTP for", otp);
     if (!stored) return false;
 
-    if (stored.data === otp && Date.now() < stored.expiresAt) {
+    console.log(stored.data);
+    console.log(data);
+
+    console.log(Date.now() < stored.expiresAt);
+    console.log(stored.expiresAt);
+    console.log(stored.data == data);
+
+    if (
+      JSON.stringify(stored.data) == JSON.stringify(data) &&
+      Date.now() < stored.expiresAt
+    ) {
       otpStorage.delete(otp);
       console.log("OTP verified for", otp);
       return true;
