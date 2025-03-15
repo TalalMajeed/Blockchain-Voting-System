@@ -24,7 +24,7 @@ router.post("/", async (req, res) => {
   const stmt = db.prepare("SELECT * FROM users WHERE email = ? OR phone = ?");
   const existingUser: any = stmt.get(email, phone);
 
-  if (existingUser.rows.length > 0) {
+  if (existingUser) {
     return res.status(400).json({ error: "User already exists" });
   }
 

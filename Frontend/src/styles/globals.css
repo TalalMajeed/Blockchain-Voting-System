@@ -5,3 +5,11 @@
 html {
   font-family: var(--font-poppins), sans-serif;
 }
+
+.ant-input-group-addon {
+  height: 50px;
+}
+
+.ant-input-wrapper input {
+  height: 50px;
+}

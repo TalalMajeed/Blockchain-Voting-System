@@ -1,13 +1,14 @@
 "use client";
 
-import { Layout, Typography } from "antd";
+import { Layout } from "antd";
 import { useState, useEffect } from "react";
-import { Button, Form, Input, Checkbox } from "antd";
+import { Button, Form, Input } from "antd";
 const { Content, Footer } = Layout;
 import Web3 from "web3";
 import { useWeb3 } from "../../context/Web3Context";
 import { useUser } from "../../context/UserContext";
 import { useRouter } from "next/navigation";
+import PhoneInput from "antd-phone-input";
 
 export default function Login() {
   const [page, setPage] = useState(1);
@@ -26,6 +27,48 @@ export default function Login() {
 
 function Base(props: { setPage: (page: number) => void }) {
   const { setEmail, email, setPhone, phone } = useUser();
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const handleSubmit = async () => {
+    setEmailError(null);
+    setPhoneError(null);
+
+    if (!email) {
+      setEmailError("Please enter a valid email!");
+    }
+    if (!phone) {
+      setPhoneError("Please enter a valid phone number!");
+    }
+
+    if (email && phone) {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/verify/otp`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, phone }),
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log("OTP Verification Successful:", data);
+          props.setPage(2);
+        } else {
+          const errorData = await response.json();
+          setError(errorData.message || "Invalid email or phone number!");
+        }
+      } catch (error) {
+        console.error("OTP Verification Failed:", error);
+        setError("Network error! Please try again.");
+      }
+    }
+  };
+
   return (
     <Form className="flex flex-col items-center justify-start w-[420px] h-[500px] bg-white rounded-[15px] p-[40px]">
       <div className="text-4xl font-semibold text-left w-[100%] pt-[20px]">
@@ -34,74 +77,61 @@ function Base(props: { setPage: (page: number) => void }) {
       <div className="text-base font-light text-left w-[100%] pb-[10px] pt-[20px]">
         Please Enter the following details to register for the voting poll!
       </div>
-      <Form.Item
-        name="email"
-        className="w-[100%] m-[0px] pt-[20px] pb-[20px] h-[70px] font-light"
-        rules={[
-          {
-            required: true,
-            message: "Please enter your email!",
-          },
-        ]}
-      >
+
+      <Form.Item className="w-[100%] m-[0px] pt-[20px] pb-[10px] h-[70px] font-light">
         <Input
           size="large"
-          value={email?.toString()}
+          value={email || ""}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-[100%] rounded-[5px] h-[50px]"
+          className={"w-[100%] rounded-[5px] h-[50px]"}
           placeholder="Enter your Email"
         />
+        {emailError && (
+          <span className="text-red-500 text-sm">{emailError}</span>
+        )}
       </Form.Item>
-      <Form.Item
-        name="phone"
-        className="w-[100%] m-[0px] mt-[5px] mb-[10px] pt-[20px] pb-[20px] h-[80px] font-light"
-        rules={[
-          {
-            required: true,
-            message: "Please enter your phone!",
-          },
-        ]}
-      >
-        <Input
-          size="large"
-          value={phone?.toString()}
-          onChange={(e) => setPhone(e.target.value)}
-          className="w-[100%] rounded-[5px] h-[50px]"
-          placeholder="Enter Phone No."
+
+      <Form.Item className="w-[100%] m-[0px] mt-[5px] mb-[10px] pt-[20px] pb-[20px] h-[80px] font-light">
+        <PhoneInput
+          country={"us"}
+          value={phone || ""}
+          onChange={(value) => setPhone(value.phoneNumber || "")}
+          placeholder="Enter your phone"
         />
+        {phoneError && (
+          <span className="text-red-500 text-sm">{phoneError}</span>
+        )}
       </Form.Item>
+
       <div className="flex-1"></div>
       <hr className="border-t-[1px] w-[100%]" />
       <div className="flex-1"></div>
-      <Form.Item
-        name="submit"
-        className="w-[100%] m-[0px] pt-[20px] pb-[20px] h-[80px]"
-      >
+
+      <Form.Item className="w-[100%] m-[0px] pt-[20px] pb-[20px] h-[80px]">
         <Button
           type="primary"
           size="large"
-          htmlType="submit"
+          htmlType="button"
           className="w-[100%] rounded-[5px] h-[50px]"
-          onClick={() => {
-            if (email && phone) {
-              props.setPage(2);
-            }
-          }}
+          onClick={handleSubmit}
         >
           Continue
         </Button>
       </Form.Item>
+      {error && (
+        <div className="text-red-500 text-sm text-center font-light">
+          {error}
+        </div>
+      )}
     </Form>
   );
 }
-
 function Account() {
   const { account, isConnecting, web3, setAccount, setIsConnecting, setWeb3 } =
     useWeb3();
 
   const router = useRouter();
 
-  //testing owner functionality
   const ownerAddress = process.env.NEXT_PUBLIC_OWNER_ADDRESS;
 
   useEffect(() => {
@@ -182,18 +212,19 @@ function Account() {
           className="w-[100%] rounded-[5px] h-[50px]"
           disabled={!account}
           onClick={() => {
-            if(account){
-              //push to admin panel instead of voter if user is owner
-              if(account && ownerAddress && account.toLowerCase() === ownerAddress.toLowerCase()){
+            if (account) {
+              if (
+                account &&
+                ownerAddress &&
+                account.toLowerCase() === ownerAddress.toLowerCase()
+              ) {
                 console.log("Owner Address from login: ", ownerAddress);
                 console.log("Requesting Address from login: ", account);
                 router.push("/panel/admin");
-              }
-              else{
+              } else {
                 router.push("/panel/vote");
               }
             }
-           
           }}
         >
           Continue
