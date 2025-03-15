@@ -25,7 +25,7 @@ router.post("/", async (req, res) => {
   const existingUser: any = stmt.get(email, phone);
 
   if (existingUser) {
-    return res.status(400).json({ error: "User already exists" });
+    return res.status(400).json({ error: "Voter already exists" });
   }
 
   let otp: string = "";
@@ -42,6 +42,7 @@ router.post("/", async (req, res) => {
       mode = "email";
       await sendEmailUsingGmail(email, otp);
     } catch (error) {
+      console.log("Error sending OTP via email:", error);
       return res.status(500).json({ error: "Error sending OTP" });
     }
   }

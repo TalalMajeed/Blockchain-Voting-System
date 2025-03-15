@@ -64,14 +64,17 @@ function Base({ setEmailg, setPhoneg, setPage, setMode }: BaseProps) {
   const [emailError, setEmailError] = useState<string | null>(null);
   const [phoneError, setPhoneError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const handleSubmit = async () => {
     setEmailError(null);
     setPhoneError(null);
     setEmailg(email || "");
     setPhoneg(phone || "");
     setError(null);
+    setLoading(true);
 
-    if (!email) {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    if (!email || !emailRegex.test(email)) {
       setEmailError("Please enter a valid email!");
     }
     if (!phone) {
@@ -98,11 +101,13 @@ function Base({ setEmailg, setPhoneg, setPage, setMode }: BaseProps) {
           setPage(2);
         } else {
           const errorData = await response.json();
-          setError(errorData.message || "Invalid email or phone number!");
+          setError(errorData.error || "Invalid email or phone number!");
         }
       } catch (error) {
         console.error("OTP Verification Failed:", error);
         setError("Network error! Please try again.");
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -158,6 +163,8 @@ function Base({ setEmailg, setPhoneg, setPage, setMode }: BaseProps) {
           htmlType="button"
           className="w-[100%] rounded-[5px] h-[50px]"
           onClick={handleSubmit}
+          disabled={loading}
+          loading={loading}
         >
           Continue
         </Button>
@@ -281,13 +288,14 @@ function OTPVerification({
           htmlType="button"
           className="w-[100%] rounded-[5px] h-[50px]"
           onClick={handleSubmit}
+          disabled={loading}
           loading={loading}
         >
           Verify
         </Button>
       </Form.Item>
       <Button
-        className="w-[100%] mt-[10px] text-center h-[50px]"
+        className="w-[100%] mt-[10px] text-center h-[50px] min-h-[50px]"
         onClick={() => setPage(1)}
       >
         Go Back

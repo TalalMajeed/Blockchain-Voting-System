@@ -1,4 +1,4 @@
-function sendWhatsAppMessage(phoneNumber: string, otp: string) {
+async function sendWhatsAppMessage(phoneNumber: string, otp: string) {
   const url = "https://graph.facebook.com/v21.0/569982299523772/messages";
   const sendText = `${otp}`;
 
@@ -34,25 +34,20 @@ function sendWhatsAppMessage(phoneNumber: string, otp: string) {
     },
   };
 
-  fetch(url, {
+  const response = await fetch(url, {
     method: "POST",
     headers: headers,
     body: JSON.stringify(data),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      //Check if it contains the error key
-      if (data.error) {
-        console.error("Error sending message:", data.error);
-        throw new Error(data.error);
-        return;
-      }
-      console.log("Message sent successfully:", data);
-    })
-    .catch((error) => {
-      console.log("Sending Email OTP");
-      throw new Error(error);
-    });
+  });
+
+  const json = await response.json();
+  if (json.error) {
+    console.error("Error sending message:", json.error);
+    throw new Error(json.error);
+    return;
+  }
+  console.log("Message sent successfully:", data);
+  return 0;
 }
 
 export { sendWhatsAppMessage };

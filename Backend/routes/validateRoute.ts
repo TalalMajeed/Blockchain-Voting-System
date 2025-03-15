@@ -23,18 +23,12 @@ router.post("/", async (req, res) => {
 
   if (status) {
     try {
-      const stmt = db.prepare(
-        "UPDATE users SET verified = 1 WHERE email = ? OR phone = ?"
-      );
+      const stmt = db.prepare("INSERT INTO users (email, phone) VALUES (?, ?)");
       const result = stmt.run(email, phone);
-
-      if (result.changes === 0) {
-        return res.status(404).json({ error: "User not found" });
-      }
 
       return res.status(200).json({ message: "OTP Verified" });
     } catch (error) {
-      console.error("Database Error:", error); // Logs error for debugging
+      console.error("Database Error:", error);
       return res.status(500).json({ error: "Error Saving Data" });
     }
   } else {
