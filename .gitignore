@@ -1,4 +1,3 @@
-.env.local
 /Frontend/node_modules
 /Frontend/.pnp
 /Frontend/.pnp.*
@@ -17,7 +16,6 @@
 /Frontend/yarn-debug.log*
 /Frontend/yarn-error.log*
 /Frontend/.pnpm-debug.log*
-/Frontend/.env*
 /Frontend/.vercel
 /Frontend/*.tsbuildinfo
 /Frontend/next-env.d.ts
@@ -68,3 +66,5 @@
 /Truffle/.vercel
 /Truffle/*.tsbuildinfo
 /Truffle/next-env.d.ts
+
+*node_modules*
