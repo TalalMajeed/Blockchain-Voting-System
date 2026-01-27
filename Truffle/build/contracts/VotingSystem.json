@@ -6300,10 +6300,16 @@
       "links": {},
       "address": "0xb39efe014Ed4e0bfD407BD250DCF0d80522f7bDA",
       "transactionHash": "0x6a9757eb43edccf8a7e7c19e99b8e4cb85a998227816a6245eef628a3f484e5f"
+    },
+    "11155111": {
+      "events": {},
+      "links": {},
+      "address": "0x48126FbF2cB6E1a234FC1A96a505039d3F239640",
+      "transactionHash": "0xcddf8f6a508c85b270dca994b54de99e9ebc3db9a512bbbeb017f4dae2348b94"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2026-01-27T06:51:07.445Z",
+  "updatedAt": "2026-01-27T14:00:52.934Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}
