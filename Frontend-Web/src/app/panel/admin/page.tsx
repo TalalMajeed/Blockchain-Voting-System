@@ -1,5 +1,5 @@
 "use client";
-import { Button, Layout, Modal, message, Row, Col, Typography } from "antd";
+import { Button, Layout, Modal, message, Row, Col, Typography, Spin } from "antd";
 import { useState, useEffect } from "react";
 import { useWeb3 } from "@/context/Web3Context";
 import { getContractInstance } from "@/utils/contract";
@@ -24,25 +24,37 @@ export default function Admin() {
   const [updated, setIsUpdated] = useState(false);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [isOwner, setIsOwner] = useState(false);
+  const [isAuthorizing, setIsAuthorizing] = useState(true);
 
   useEffect(() => {
-    if (!account) router.replace("/admin/login");
-  }, [account, router]);
-
-  useEffect(() => {
-    const checkOwnership = async () => {
-      if (!web3 || !account) return;
-      try {
-        const ownerAddress = owner?.toLowerCase();
-        const accountAddress = account.toLowerCase();
-        setIsOwner(ownerAddress === accountAddress);
-      } catch (error) {
-        console.error("Error checking ownership:", error);
+    const authorize = async () => {
+      if (!account) {
+        router.replace("/admin/login");
+        return;
       }
+
+      const ownerAddress = owner?.toLowerCase();
+      if (!ownerAddress) {
+        router.replace("/admin/login");
+        return;
+      }
+
+      const accountAddress = account.toLowerCase();
+      const allowed = ownerAddress === accountAddress;
+      if (!allowed) {
+        router.replace("/admin/login");
+        return;
+      }
+
+      setIsOwner(true);
+      setIsAuthorizing(false);
     };
-  
-    checkOwnership();
-  }, [web3, account]);
+
+    authorize().catch((error) => {
+      console.error("Error authorizing admin:", error);
+      router.replace("/admin/login");
+    });
+  }, [account, owner, router]);
 
   useEffect(() => {
     if(web3 && account){
@@ -140,7 +152,14 @@ export default function Admin() {
   return (
     <>
     {contextHolder}
-    {!isOwner ? ( <p className="text-center text-red-500 text-lg">You are not authorised to access this page.</p> ) : (
+    {isAuthorizing ? (
+      <div className="min-h-screen w-full flex flex-col items-center justify-center gap-3">
+        <Spin size="large" />
+        <div className="text-gray-600 text-base font-light">
+          Checking admin access...
+        </div>
+      </div>
+    ) : (
     <Layout className="min-h-screen flex flex-col font-sans bg-gray-100 p-10">
       {contextHolder}
       <h1 className="text-center text-3xl font-bold text-gray-800 mt-5 mb-3">
