@@ -314,8 +314,6 @@ function Account() {
 
   const router = useRouter();
 
-  const ownerAddress = process.env.NEXT_PUBLIC_OWNER_ADDRESS;
-
   useEffect(() => {
     if (typeof window !== "undefined" && (window as any).ethereum) {
       const web3Instance = new Web3((window as any).ethereum);
@@ -387,30 +385,20 @@ function Account() {
         name="submit"
         className="w-[100%] m-[0px] pt-[20px] pb-[20px] h-[80px]"
       >
-        <Button
-          type="primary"
-          size="large"
-          htmlType="submit"
-          className="w-[100%] rounded-[5px] h-[50px]"
-          disabled={!account}
-          onClick={() => {
-            if (account) {
-              if (
-                account &&
-                ownerAddress &&
-                account.toLowerCase() === ownerAddress.toLowerCase()
-              ) {
-                console.log("Owner Address from login: ", ownerAddress);
-                console.log("Requesting Address from login: ", account);
-                router.push("/panel/admin");
-              } else {
+          <Button
+            type="primary"
+            size="large"
+            htmlType="submit"
+            className="w-[100%] rounded-[5px] h-[50px]"
+            disabled={!account}
+            onClick={() => {
+              if (account) {
                 router.push("/panel/vote");
               }
-            }
-          }}
-        >
-          Continue
-        </Button>
+            }}
+          >
+            Continue
+          </Button>
       </Form.Item>
     </Form>
   );

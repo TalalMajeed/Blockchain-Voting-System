@@ -1,7 +1,7 @@
 import { Router } from "express";
 import express from "express";
-import { verifyOTP } from "../workers/otpWorker.ts";
-import { User } from "../models/User.ts";
+import { verifyOTP } from "../workers/otpWorker";
+import { User } from "../models/User";
 
 const router: Router = express.Router();
 

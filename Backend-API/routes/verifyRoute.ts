@@ -3,10 +3,10 @@ import express from "express";
 
 const router: Router = express.Router();
 
-import { storeOTP } from "../workers/otpWorker.ts";
-import { sendMail } from "../utils/email.ts";
-import { sendWhatsAppMessage } from "../utils/whatsapp.ts";
-import { User } from "../models/User.ts";
+import { storeOTP } from "../workers/otpWorker";
+import { sendMail } from "../utils/email";
+import { sendWhatsAppMessage } from "../utils/whatsapp";
+import { User } from "../models/User";
 
 interface RequestBody {
   email: string;

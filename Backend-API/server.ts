@@ -2,14 +2,14 @@ import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
-import otpRoute from "./routes/validateRoute.ts";
-import verifyRoute from "./routes/verifyRoute.ts";
-import adminRoute from "./routes/adminRoute.ts";
+import otpRoute from "./routes/validateRoute";
+import verifyRoute from "./routes/verifyRoute";
+import adminRoute from "./routes/adminRoute";
 dotenv.config();
 dotenv.config({ path: ".env.local", override: true });
 
-import indexRoute from "./routes/indexRoute.ts";
-import { connectMongo } from "./database/mongo.ts";
+import indexRoute from "./routes/indexRoute";
+import { connectMongo } from "./database/mongo";
 
 const app = express();
 
