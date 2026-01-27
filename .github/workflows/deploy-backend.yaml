@@ -34,8 +34,6 @@ jobs:
         uses: dopplerhq/cli-action@v2
         with:
           doppler_token: ${{ secrets.DOPPLER_BACKEND_TOKEN }}
-          doppler_project: ${{ secrets.DOPPLER_BACKEND_PROJECT }}
-          doppler_config: ${{ secrets.DOPPLER_CONFIG }}
 
       - name: Download .env from Doppler
         run: doppler secrets download --no-file --format env > .env
