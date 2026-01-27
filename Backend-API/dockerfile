@@ -5,24 +5,17 @@ WORKDIR /app
 # Copy package files first to leverage build caching
 COPY package*.json ./
 
-# Copy Prisma schema early so postinstall works
-COPY prisma ./prisma
+# Copy environment variables
 COPY .env ./
 
 # Install dependencies
 RUN npm ci
 
-RUN npx prisma generate
-RUN npx prisma db push
-
 # Now copy the rest of your source code
 COPY . .
 
-# Build NestJS
+# Build ExpressJS
 RUN npm run build
-
-# Copy Swagger doc into dist
-COPY swagger.yaml ./dist/
 
 EXPOSE 5500
 
