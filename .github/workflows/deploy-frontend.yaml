@@ -42,8 +42,8 @@ jobs:
 
       - name: Move and cat .env
         run: |
-          mv .env ./Backend-API/.env
-          cat ./Backend-API/.env
+          mv .env ./Frontend-Web/.env
+          cat ./Frontend-Web/.env
 
       - name: Create a Frontend Build
         working-directory: ./Frontend-Web
