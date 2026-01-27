@@ -4,7 +4,7 @@ import express from "express";
 const router: Router = express.Router();
 
 import { storeOTP } from "../workers/otpWorker.ts";
-import { sendEmailUsingGmail } from "../utils/email.ts";
+import { sendMail } from "../utils/email.ts";
 import { sendWhatsAppMessage } from "../utils/whatsapp.ts";
 import db from "../database/setup.ts";
 
@@ -40,7 +40,7 @@ router.post("/", async (req, res) => {
   } catch (error) {
     try {
       mode = "email";
-      await sendEmailUsingGmail(email, otp);
+      await sendMail(email, otp);
     } catch (error) {
       console.log("Error sending OTP via email:", error);
       return res.status(500).json({ error: "Error sending OTP" });
