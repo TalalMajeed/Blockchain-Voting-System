@@ -1,7 +1,7 @@
 import { Router } from "express";
 import express from "express";
-import db from "../database/setup.ts";
 import { verifyOTP } from "../workers/otpWorker.ts";
+import { User } from "../models/User.ts";
 
 const router: Router = express.Router();
 
@@ -23,12 +23,16 @@ router.post("/", async (req, res) => {
 
   if (status) {
     try {
-      const stmt = db.prepare("INSERT INTO users (email, phone) VALUES (?, ?)");
-      const result = stmt.run(email, phone);
+      await User.create({ email, phone });
 
       return res.status(200).json({ message: "OTP Verified" });
     } catch (error) {
       console.error("Database Error:", error);
+      if (typeof error === "object" && error && "code" in error) {
+        if ((error as { code?: unknown }).code === 11000) {
+          return res.status(400).json({ error: "Voter already exists" });
+        }
+      }
       return res.status(500).json({ error: "Error Saving Data" });
     }
   } else {

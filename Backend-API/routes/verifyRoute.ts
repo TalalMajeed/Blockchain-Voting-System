@@ -6,7 +6,7 @@ const router: Router = express.Router();
 import { storeOTP } from "../workers/otpWorker.ts";
 import { sendMail } from "../utils/email.ts";
 import { sendWhatsAppMessage } from "../utils/whatsapp.ts";
-import db from "../database/setup.ts";
+import { User } from "../models/User.ts";
 
 interface RequestBody {
   email: string;
@@ -21,8 +21,9 @@ router.post("/", async (req, res) => {
     return res.status(400).json({ error: "Email and Phone Required" });
   }
 
-  const stmt = db.prepare("SELECT * FROM users WHERE email = ? OR phone = ?");
-  const existingUser: any = stmt.get(email, phone);
+  const existingUser = await User.findOne({
+    $or: [{ email: email.toLowerCase() }, { phone }],
+  }).lean();
 
   if (existingUser) {
     return res.status(400).json({ error: "Voter already exists" });
