@@ -15,12 +15,12 @@ app.use(
   cors({
     origin: "http://localhost:3000",
     credentials: true,
-  })
+  }),
 );
 app.use(express.json());
 app.use(helmet());
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 app.use("/api/validate/otp", otpRoute);
 app.use("/api/verify/otp", verifyRoute);
