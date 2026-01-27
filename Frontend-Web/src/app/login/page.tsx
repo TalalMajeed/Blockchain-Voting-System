@@ -71,44 +71,44 @@ function Base({ setEmailg, setPhoneg, setPage, setMode }: BaseProps) {
     setEmailg(email || "");
     setPhoneg(phone || "");
     setError(null);
-    setLoading(true);
 
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     if (!email || !emailRegex.test(email)) {
       setEmailError("Please enter a valid email!");
+      return;
     }
     if (!phone) {
       setPhoneError("Please enter a valid phone number!");
+      return;
     }
 
-    if (email && phone) {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/verify/otp`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email, phone }),
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/verify/otp`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
           },
-        );
+          body: JSON.stringify({ email, phone }),
+        },
+      );
 
-        if (response.ok) {
-          const data = await response.json();
-          console.log("OTP Verification Successful:", data);
-          setMode(data.mode);
-          setPage(2);
-        } else {
-          const errorData = await response.json();
-          setError(errorData.error || "Invalid email or phone number!");
-        }
-      } catch (error) {
-        console.error("OTP Verification Failed:", error);
-        setError("Network error! Please try again.");
-      } finally {
-        setLoading(false);
+      if (response.ok) {
+        const data = await response.json();
+        console.log("OTP Verification Successful:", data);
+        setMode(data.mode);
+        setPage(2);
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || "Invalid email or phone number!");
       }
+    } catch (error) {
+      console.error("OTP Verification Failed:", error);
+      setError("Network error! Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -385,20 +385,20 @@ function Account() {
         name="submit"
         className="w-[100%] m-[0px] pt-[20px] pb-[20px] h-[80px]"
       >
-          <Button
-            type="primary"
-            size="large"
-            htmlType="submit"
-            className="w-[100%] rounded-[5px] h-[50px]"
-            disabled={!account}
-            onClick={() => {
-              if (account) {
-                router.push("/panel/vote");
-              }
-            }}
-          >
-            Continue
-          </Button>
+        <Button
+          type="primary"
+          size="large"
+          htmlType="submit"
+          className="w-[100%] rounded-[5px] h-[50px]"
+          disabled={!account}
+          onClick={() => {
+            if (account) {
+              router.push("/panel/vote");
+            }
+          }}
+        >
+          Continue
+        </Button>
       </Form.Item>
     </Form>
   );
