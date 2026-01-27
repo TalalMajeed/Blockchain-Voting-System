@@ -5,6 +5,7 @@ import { ConfigProvider } from "antd";
 import { Button } from "antd";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import { Poppins } from "next/font/google";
 import { Web3Provider } from "../context/Web3Context";
 import { UserProvider } from "../context/UserContext";
@@ -41,15 +42,34 @@ export default function RootLayout({
           <Web3Provider>
             <UserProvider>
               {!pathname.includes("login") && (
-                <section className="pl-10 pr-10 bg-transparent border-b-2 flex h-[70px] items-center justify-between">
-                  <div className="text-xl font-[500]">Voting System</div>
-                  {pathname === "/" && (
-                    <Link href="/login" passHref>
-                      <Button className="h-[45px] w-[120px] text-base">
-                        Login
-                      </Button>
+                <section className="w-full border-b border-gray-200 bg-white/70 backdrop-blur">
+                  <div className="max-w-6xl mx-auto px-6 h-[70px] flex items-center justify-between">
+                    <Link
+                      href="/"
+                      className="flex items-center gap-3 select-none"
+                      aria-label="Voting System Home"
+                    >
+                      <div className="h-10 w-10 rounded-xl bg-white shadow-sm border border-emerald-100 flex items-center justify-center">
+                        <Image
+                          src="/logo.png"
+                          width={26}
+                          height={26}
+                          alt="Voting System"
+                        />
+                      </div>
+                      <div className="text-xl font-[600] tracking-tight">
+                        Voting System
+                      </div>
                     </Link>
-                  )}
+
+                    {pathname === "/" && (
+                      <Link href="/login" passHref>
+                        <Button className="h-[45px] w-[120px] text-base">
+                          Login
+                        </Button>
+                      </Link>
+                    )}
+                  </div>
                 </section>
               )}
               {children}

@@ -14,14 +14,6 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div className="flex flex-col gap-6">
               <div className="flex items-center gap-3">
-                <div className="h-12 w-12 rounded-xl bg-white shadow-sm border border-emerald-100 flex items-center justify-center">
-                  <Image
-                    src="/logo.png"
-                    width={32}
-                    height={32}
-                    alt="Voting System"
-                  />
-                </div>
                 <div className="text-sm font-medium text-emerald-700 bg-emerald-100/60 border border-emerald-200 rounded-full px-3 py-1">
                   Secure • Transparent • Verifiable
                 </div>
@@ -99,12 +91,10 @@ export default function Home() {
                   </div>
 
                   <div className="mt-8 rounded-2xl border border-gray-100 bg-gray-50 p-4 text-sm text-gray-600">
-                    <div className="font-medium text-gray-900">
-                      Local dev setup
-                    </div>
+                    <div className="font-medium text-gray-900">Setup</div>
                     <div className="mt-1">
-                      Runs with Truffle + Ganache. Ensure MetaMask is on the
-                      correct network and contract is deployed.
+                      Runs with Sepolia Testnet. Ensure MetaMask is on the
+                      correct network.
                     </div>
                   </div>
                 </div>
@@ -147,15 +137,7 @@ function Stat({ title, desc }: { title: string; desc: string }) {
   );
 }
 
-function Step({
-  n,
-  title,
-  desc,
-}: {
-  n: string;
-  title: string;
-  desc: string;
-}) {
+function Step({ n, title, desc }: { n: string; title: string; desc: string }) {
   return (
     <div className="flex gap-3">
       <div className="h-9 w-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-sm font-semibold">
