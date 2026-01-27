@@ -19,4 +19,4 @@ RUN npm run build
 
 EXPOSE 5500
 
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start"]
