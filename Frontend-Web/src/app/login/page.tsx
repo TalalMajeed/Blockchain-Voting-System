@@ -46,7 +46,7 @@ export default function Login() {
         {page == 3 && <Account />}
       </Content>
       <Footer className="text-center text-base bg-transparent font-light text-gray-600">
-        Voting System ©2025 | All Rights Reserved
+        Voting System ©2026 | All Rights Reserved
       </Footer>
     </Layout>
   );
@@ -91,7 +91,7 @@ function Base({ setEmailg, setPhoneg, setPage, setMode }: BaseProps) {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({ email, phone }),
-          }
+          },
         );
 
         if (response.ok) {
@@ -142,7 +142,7 @@ function Base({ setEmailg, setPhoneg, setPage, setMode }: BaseProps) {
             setPhone(
               (value.countryCode || "") +
                 (value.areaCode || "") +
-                (value.phoneNumber || "")
+                (value.phoneNumber || ""),
             )
           }
           placeholder="Enter your phone"
@@ -217,7 +217,7 @@ function OTPVerification({
             phone,
             code: otp,
           }),
-        }
+        },
       );
 
       if (response.ok) {
@@ -376,8 +376,8 @@ function Account() {
         {isConnecting
           ? "Connecting..."
           : account
-          ? "Connected Wallet!"
-          : "Connect MetaMask"}
+            ? "Connected Wallet!"
+            : "Connect MetaMask"}
       </Button>
 
       <div className="flex-1"></div>
@@ -440,7 +440,7 @@ const OTPInput: React.FC<OtpInputProps> = ({ onChange, disabled = false }) => {
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement>,
-    index: number
+    index: number,
   ): void => {
     let { value } = e.target;
 
@@ -458,7 +458,7 @@ const OTPInput: React.FC<OtpInputProps> = ({ onChange, disabled = false }) => {
 
   const handleKeyDown = (
     e: KeyboardEvent<HTMLInputElement>,
-    index: number
+    index: number,
   ): void => {
     if (e.key === "Backspace") {
       if (!otpValues[index] && index > 0 && inputRefs.current[index - 1]) {
