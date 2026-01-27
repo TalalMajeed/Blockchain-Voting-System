@@ -7,11 +7,13 @@ const { Content, Footer} = Layout;
 const { Title } = Typography;
 import AdminDisplayCard from "@/components/AdminDisplayCard";
 import { fetchCandidatesUtil, Candidate } from "@/utils/fetchCandidates";
+import { useRouter } from "next/navigation";
 
 export default function Admin() {
 
   const owner = process.env.NEXT_PUBLIC_OWNER_ADDRESS;
   const { web3, account } = useWeb3();
+  const router = useRouter();
   const [candidate, setCandidate] = useState("");
   const [id, setID] = useState("");
   const [txData, setTxData] = useState<any>(null);
@@ -22,6 +24,10 @@ export default function Admin() {
   const [updated, setIsUpdated] = useState(false);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [isOwner, setIsOwner] = useState(false);
+
+  useEffect(() => {
+    if (!account) router.replace("/admin/login");
+  }, [account, router]);
 
   useEffect(() => {
     const checkOwnership = async () => {
@@ -69,7 +75,7 @@ export default function Admin() {
       return;
     }
     try {
-      const contract = getContractInstance(web3);
+      const contract = await getContractInstance(web3);
       const tx = await contract.methods
         .addCandidate(candidate.trim())
         .send({ from: account });
@@ -83,7 +89,7 @@ export default function Admin() {
       }
     } catch (error: any) {
       console.error("Transaction failed:", error);
-      messageApi.error("Failed to add candidate.");
+      messageApi.error(error?.message ?? "Failed to add candidate.");
     }
   };
 
@@ -99,7 +105,7 @@ export default function Admin() {
     }
     try {
       const candidateId = parseInt(id) - 1;
-      const contract = getContractInstance(web3);
+      const contract = await getContractInstance(web3);
       const tx = await contract.methods
         .removeCandidate(candidateId)
         .send({ from: account });
@@ -122,7 +128,7 @@ export default function Admin() {
         messageApi.error("Candidate does not exist.");
       } else {
         setRemoveError("An error occurred while removing the candidate.");
-        messageApi.error("Transaction failed.");
+        messageApi.error(error?.message ?? "Transaction failed.");
       }
     }
   };
@@ -281,4 +287,3 @@ export default function Admin() {
     </>
   );
 }
-

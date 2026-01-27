@@ -10,7 +10,7 @@ export interface Candidate {
 export const fetchCandidatesUtil = async (web3: any): Promise<Candidate[]> => {
   if (!web3) return [];
   try {
-    const contract = getContractInstance(web3);
+    const contract = await getContractInstance(web3);
     const candidatesData = await contract.methods.getAllCandidates().call();
 
     const formattedCandidates = Array.isArray(candidatesData)

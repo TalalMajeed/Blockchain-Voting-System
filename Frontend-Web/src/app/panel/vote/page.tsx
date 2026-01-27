@@ -31,7 +31,7 @@ const Cast: React.FC = () => {
     }
 
     try {
-      const contract = getContractInstance(web3);
+      const contract = await getContractInstance(web3);
       const tx = await contract.methods
         .vote(candidateIndex)
         .send({ from: account });
@@ -50,7 +50,7 @@ const Cast: React.FC = () => {
       messageApi.error(
         error.message.includes("Candidate does not exist")
           ? "Candidate does not exist."
-          : "Transaction failed."
+          : error?.message ?? "Transaction failed."
       );
     }
   };
